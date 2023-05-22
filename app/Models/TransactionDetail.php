@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,6 @@ class TransactionDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Transaction::class, 'products_id');
+        return $this->belongsTo(Product::class, 'products_id');
     }
 }

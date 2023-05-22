@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Daftar Barang
+                        Daftar Transaksi
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -28,14 +28,15 @@
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
-                                        <td>{{ $item->transaction_tota }}</td>
+                                        <td>{{ $item->number }}</td>
+                                        <td>{{ $item->transaction_total }}</td>
                                         <td>
                                             @if ($item->transaction_status === 'FAILED')
                                                 <span class="badge badge-danger">
                                                 @elseif($item->transaction_status === 'SUCCESS')
                                                     <span class="badge badge-info">
                                                     @elseif($item->transaction_status === 'PENDING')
-                                                        <span class="badge badge-primary">
+                                                        <span class="badge badge-warning">
                                                         @else
                                                             <span>
                                             @endif
@@ -44,18 +45,25 @@
                                         </td>
                                         <td>
                                             {{-- @if ($item->transaction_status === 'PENDING')
-                                                <a href="{{ route('transactions.update', ['transaction' => $item->id]) }}?status=SUCCESS"
+                                                <a href="{{ route('transactions.status', ['transaction' => $item->id]) }}?status=SUCCESS"
                                                     class="btn btn-success btn-sm">
                                                     <i class="fa fa-check"></i>
                                                 </a>
-                                                <a href="{{ route('transactions.update', ['transaction' => $item->id]) }}?status=FAILED"
+                                                <a href="{{ route('transactions.status', ['transaction' => $item->id]) }}?status=FAILED"
                                                     class="btn btn-danger btn-sm">
-                                                    <i class="fa fa-remove"></i>
+                                                    <i class="fa fa-times"></i>
                                                 </a>
                                             @endif --}}
+                                            <a href="#mymodal"
+                                                data-remote={{ route('transactions.show', ['transaction' => $item->id]) }}
+                                                data-toggle="modal" data-target="#mymodal"
+                                                data-title="Detail Transaksi {{ $item->uuid }}"
+                                                class="btn btn-info btn-sm">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
                                             <a href={{ route('products.edit', ['product' => $item->id]) }}
                                                 class="btn btn-primary btn-sm">
-                                                <i class="fa fa-cross"></i>
+                                                <i class="fa fa-pencil"></i>
                                             </a>
                                             <form action={{ route('products.destroy', ['product' => $item->id]) }}
                                                 method="post" class="d-inline">
@@ -69,7 +77,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center p-5">
+                                        <td colspan="7" class="text-center p-5">
                                             Data tidak tersedia
                                         </td>
                                     </tr>

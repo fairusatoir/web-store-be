@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="box-title">Daftar Foto Barang</h4>
+                    <h4 class="box-title">Daftar Foto Barang {{ $product->name }}</h4>
                 </div>
                 <div class="card-body--">
                     <div class="table-stats order-table ov-h">
@@ -12,7 +12,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Barang</th>
+                                    <th>Name Barang</th>
                                     <th>Foto</th>
                                     <th>Default</th>
                                     <th>Action</th>

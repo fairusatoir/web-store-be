@@ -24,6 +24,7 @@
 <script src="{{ asset('assets/js/init/fullcalendar-init.js') }}"></script>
 
 @stack('ckeditor')
+@stack('inputfile')
 
 <script>
     function updateFileName(input) {

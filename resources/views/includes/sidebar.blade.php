@@ -25,8 +25,9 @@
                     </li>
 
                     <li class="menu-title">Transaksi</li><!-- /.menu-title -->
-                    <li class="">
-                        <a href="#"> <i class="menu-icon fa fa-list"></i>Lihat Transaksi</a>
+                    <li class="{{ Route::is('product-galleries.create') ? 'active' : '' }}">
+                        <a href={{ route('transactions.index') }}> <i class="menu-icon fa fa-list"></i>Lihat
+                            Transaksi</a>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->

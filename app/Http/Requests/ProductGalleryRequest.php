@@ -30,10 +30,8 @@ class ProductGalleryRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (!$this->filled('is_default')) {
-            $this->merge([
-                'is_default' => false, // Nilai default jika tidak ada dalam permintaan
-            ]);
-        }
+        $this->merge([
+            'is_default' => $this->filled('is_default') ? true : false,
+        ]);
     }
 }

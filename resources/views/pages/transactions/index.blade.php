@@ -15,9 +15,10 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
+                                    <th>Email</th>
+                                    <th>Nomor</th>
+                                    <th>Total Transaksi</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -26,17 +27,35 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
-                                        <td>{{ $item->type }}</td>
-                                        <td>{{ $item->price }}</td>
-                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->transaction_tota }}</td>
                                         <td>
-                                            <a href={{ route('products.gallery', ['product' => $item->id]) }}
-                                                class="btn btn-info btn-sm">
-                                                <i class="fa fa-picture-o"></i>
-                                            </a>
+                                            @if ($item->transaction_status === 'FAILED')
+                                                <span class="badge badge-danger">
+                                                @elseif($item->transaction_status === 'SUCCESS')
+                                                    <span class="badge badge-info">
+                                                    @elseif($item->transaction_status === 'PENDING')
+                                                        <span class="badge badge-primary">
+                                                        @else
+                                                            <span>
+                                            @endif
+
+                                            {{ $item->transaction_status }}</span>
+                                        </td>
+                                        <td>
+                                            {{-- @if ($item->transaction_status === 'PENDING')
+                                                <a href="{{ route('transactions.update', ['transaction' => $item->id]) }}?status=SUCCESS"
+                                                    class="btn btn-success btn-sm">
+                                                    <i class="fa fa-check"></i>
+                                                </a>
+                                                <a href="{{ route('transactions.update', ['transaction' => $item->id]) }}?status=FAILED"
+                                                    class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
+                                            @endif --}}
                                             <a href={{ route('products.edit', ['product' => $item->id]) }}
                                                 class="btn btn-primary btn-sm">
-                                                <i class="fa fa-pencil"></i>
+                                                <i class="fa fa-cross"></i>
                                             </a>
                                             <form action={{ route('products.destroy', ['product' => $item->id]) }}
                                                 method="post" class="d-inline">

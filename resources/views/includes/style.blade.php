@@ -58,4 +58,15 @@
     #cellPaiChart {
         height: 160px;
     }
+
+    /* custom */
+
+    .footer-title {
+        margin: 0 auto;
+        width: 80%;
+    }
+
+    .ck-editor__editable {
+        min-height: 250px;
+    }
 </style>

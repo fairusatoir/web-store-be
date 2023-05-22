@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-<script src="assets/js/main.js"></script>
+<script src={{ asset('assets/js/main.js') }}></script>
 
 <!--  Chart js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>
@@ -22,6 +22,19 @@
 <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
 <script src="{{ asset('assets/js/init/fullcalendar-init.js') }}"></script>
+
+@stack('ckeditor')
+
+<script>
+    function updateFileName(input) {
+        var label = input.nextElementSibling;
+        if (input.files && input.files.length > 0) {
+            label.innerText = input.files[0].name;
+        } else {
+            label.innerText = 'Choose file';
+        }
+    }
+</script>
 
 <!--Local Stuff-->
 <script>

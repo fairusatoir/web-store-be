@@ -31,7 +31,10 @@
             @yield('content')
         </div>
         <!-- /.content -->
+
         <div class="clearfix"></div>
+
+        {{-- @include('includes.footer') --}}
     </div>
     <!-- /#right-panel -->
 

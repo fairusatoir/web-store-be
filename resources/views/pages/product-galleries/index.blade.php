@@ -3,10 +3,12 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <h4 class="box-title">Daftar Foto Barang</h4>
+                <div class="card-header">
+                    <strong>
+                        Daftar Foto Barang
+                    </strong>
                 </div>
-                <div class="card-body--">
+                <div class="card-body card-block">
                     <div class="table-stats order-table ov-h">
                         <table class="table">
                             <thead>
@@ -41,7 +43,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center p-5">
+                                        <td colspan="5" class="text-center p-5">
                                             Data tidak tersedia
                                         </td>
                                     </tr>

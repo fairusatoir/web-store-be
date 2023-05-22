@@ -31,8 +31,10 @@
                                 <div class="custom-file">
                                     <input type="file"
                                         class="custom-file-input form-control @error('photo') is-invalid @enderror"
-                                        name="photo" id="customFile" accept="image/*">
-                                    <label class="custom-file-label form-control-label" for="customFile">Upload Foto</label>
+                                        name="photo" id="customFile" accept="image/*" required>
+                                    <label class="custom-file-label form-control-label" id="customFileLabel"
+                                        for="customFile">Upload
+                                        Foto</label>
                                     @error('photo')
                                         <div class="text-muted">{{ $message }}</div>
                                     @enderror
@@ -55,7 +57,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button class="btn btn-primary btn-block" type="submit">
+                            <button class="btn btn-primary btn-block" type="submit" onsubmit="return checkFoto()">
                                 Tambah barang
                             </button>
                         </div>
@@ -65,3 +67,15 @@
         </div>
     </div>
 @endsection
+
+@push('inputfile')
+    <script>
+        const customFileInput = document.getElementById('customFile');
+        const customFileLabel = document.getElementById('customFileLabel');
+
+        customFileInput.addEventListener('change', function() {
+            const fileName = this.files[0].name;
+            customFileLabel.textContent = fileName;
+        });
+    </script>
+@endpush

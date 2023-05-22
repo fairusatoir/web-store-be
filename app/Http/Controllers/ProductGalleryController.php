@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProductGallery;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProductGalleryRequest;
 
 class ProductGalleryController extends Controller
@@ -48,14 +49,23 @@ class ProductGalleryController extends Controller
     public function store(ProductGalleryRequest $request)
     {
         try {
+            $file = $request->file('photo');
+
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'photo_product_' . Str::random(10) . '.' . $extension;
+            $directory = 'assets/product/' . $request->products_id;
+
+            // Membuat direktori jika belum ada
+            if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory);
+            }
+            $path = $file->storeAs($directory, $fileName, 'public');
+
             $data = $request->all();
-            $data['photo'] = $request->file('photo')->store(
-                'assets/product',
-                'public'
-            );
+            $data['photo'] = $path;
             ProductGallery::create($data);
         } catch (Exception $e) {
-            echo "Create new Product fail with error " . $e->getMessage();
+            $this->logError($request->header('X-Request-ID'), $e);
         }
         return redirect()->route('product-galleries.index');
     }
@@ -63,7 +73,7 @@ class ProductGalleryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         //
     }
@@ -71,7 +81,7 @@ class ProductGalleryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
         //
     }
@@ -87,8 +97,14 @@ class ProductGalleryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        try {
+            $item = ProductGallery::findOrFail($id);
+            $item->delete();
+        } catch (Exception $e) {
+            $this->logError($request->header('X-Request-ID'), $e);
+        }
+        return redirect()->route('product-galleries.index');
     }
 }

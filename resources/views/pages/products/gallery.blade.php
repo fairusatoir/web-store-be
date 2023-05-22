@@ -3,18 +3,16 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <strong>
-                        Daftar Foto Barang
-                    </strong>
+                <div class="card-body">
+                    <h4 class="box-title">Daftar Foto Barang {{ $product->name }}</h4>
                 </div>
-                <div class="card-body card-block">
+                <div class="card-body--">
                     <div class="table-stats order-table ov-h">
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Barang</th>
+                                    <th>Name Barang</th>
                                     <th>Foto</th>
                                     <th>Default</th>
                                     <th>Action</th>
@@ -43,7 +41,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center p-5">
+                                        <td colspan="6" class="text-center p-5">
                                             Data tidak tersedia
                                         </td>
                                     </tr>

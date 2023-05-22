@@ -30,7 +30,8 @@
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->quantity }}</td>
                                         <td>
-                                            <a href="" class="btn btn-info btn-sm">
+                                            <a href={{ route('products.gallery', ['product' => $item->id]) }}
+                                                class="btn btn-info btn-sm">
                                                 <i class="fa fa-picture-o"></i>
                                             </a>
                                             <a href={{ route('products.edit', ['product' => $item->id]) }}

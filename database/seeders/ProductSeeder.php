@@ -27,16 +27,15 @@ class ProductSeeder extends Seeder
                     'slug' => Str::slug($name),
                     'type' => Faker::create()->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
                     'description' => Faker::create()->sentence,
-                    'price' => Faker::create()->randomFloat(2, 10, 100),
+                    'price' => Faker::create()->randomFloat(2, 100, 999),
                     'quantity' => Faker::create()->numberBetween(1, 100),
                 ]);
             }
             DB::commit();
             echo "\t" . $limit . " Product has been created\n";
         } catch (Exception $e) {
+            DB::rollBack();
             echo "\tProduct has error " . $e->getMessage() . "\n";
         }
-        // @phpstan-ignore-next-line
-
     }
 }

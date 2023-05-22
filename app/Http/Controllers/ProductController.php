@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ProductGallery;
 use App\Http\Requests\ProductRequest;
-use Exception;
 
 class ProductController extends Controller
 {
@@ -49,7 +50,7 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($request->name);
             Product::create($data);
         } catch (Exception $e) {
-            echo "Create new Product fail with error " . $e->getMessage();
+            $this->logError($request->header('X-Request-ID'), $e);
         }
         return redirect()->route('products.index');
     }
@@ -57,7 +58,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         //
     }
@@ -65,7 +66,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
         return view('pages.products.edit')->with([
             'item' => Product::findOrFail($id)
@@ -83,7 +84,7 @@ class ProductController extends Controller
             $item = Product::findOrFail($id);
             $item->update($data);
         } catch (Exception $e) {
-            echo "Create new Product fail with error " . $e->getMessage();
+            $this->logError($request->header('X-Request-ID'), $e);
         }
         return redirect()->route('products.index');
     }
@@ -91,14 +92,33 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         try {
             $item = Product::findOrFail($id);
             $item->delete();
+
+            ProductGallery::where('products_id', $id)->delete();
         } catch (Exception $e) {
-            echo "Create new Product fail with error " . $e->getMessage();
+            $this->logError($request->header('X-Request-ID'), $e);
         }
         return redirect()->route('products.index');
+    }
+
+    /**
+     * Display specified resource base on the product ID.
+     */
+    public function gallery(Request $request, string $product)
+    {
+        try {
+            return view('pages.products.gallery')->with([
+                'product' => Product::findOrFail($product),
+                'data' => ProductGallery::with('products')
+                    ->where('products_id', $product)
+                    ->get()
+            ]);
+        } catch (Exception $e) {
+            $this->logError($request->header('X-Request-ID'), $e);
+        }
     }
 }

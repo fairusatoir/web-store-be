@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -23,10 +24,11 @@ class ProductRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
+            'slug' => 'required|max:255',
             'type' => 'required|max:255',
             'description' => 'required|max:255',
-            'price' => 'required|max:255',
-            'quantity' => 'required|max:255',
+            'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
         ];
     }
 
@@ -37,5 +39,12 @@ class ProductRequest extends FormRequest
             // 'email.required' => 'Email wajib diisi.',
             // 'email.email' => 'Format email tidak valid.',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'slug' => $this->filled('slug') ? Str::slug($this->input('name')) : false,
+        ]);
     }
 }

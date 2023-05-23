@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use Exception;
+use App\Models\Product;
 use App\Models\Transaction;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
+use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -19,16 +21,21 @@ class TransactionSeeder extends Seeder
         try {
             DB::beginTransaction();
             $faker = Faker::create();
-            $limit = 5;
+            $limit = 15;
             for ($i = 0; $i < $limit; $i++) {
-                Transaction::create([
+                $transaction = Transaction::create([
                     'uuid' => "TRX" . date('Ymd') . $faker->randomNumber(4),
                     'name' => $faker->name,
                     'email' => $faker->email,
                     'number' => $faker->phoneNumber,
                     'address' => $faker->address,
-                    'transaction_total' => $faker->randomFloat(2, 2, 20),
+                    'transaction_total' => $faker->numberBetween(2, 25),
                     'transaction_status' => $faker->randomElement(['PENDING', 'SUCCESS', 'FAILED']),
+                ]);
+
+                TransactionDetail::create([
+                    'transactions_id' => $transaction->id,
+                    'products_id' => Product::pluck('id')->random(),
                 ]);
             }
             DB::commit();

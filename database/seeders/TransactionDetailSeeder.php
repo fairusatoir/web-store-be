@@ -17,19 +17,6 @@ class TransactionDetailSeeder extends Seeder
      */
     public function run(): void
     {
-        try {
-            DB::beginTransaction();
-            $limit = 8;
-            for ($i = 0; $i < $limit; $i++) {
-                TransactionDetail::create([
-                    'transactions_id' => Transaction::pluck('id')->random(),
-                    'products_id' => Product::pluck('id')->random(),
-                ]);
-            }
-            DB::commit();
-            echo "\t" . $limit . " Transaction Detail has been created\n";
-        } catch (Exception $e) {
-            echo "\tTransaction Detail has error " . $e->getMessage() . "\n";
-        }
+        //
     }
 }

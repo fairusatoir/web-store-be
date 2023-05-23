@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
@@ -16,8 +16,29 @@ class Controller extends BaseController
     public function logError(Request $request, Exception $e)
     {
         $traceJson = json_encode($e->getTrace());
-        Log::error(
-            "[{$request->header('x-request-id')}] [{$e->getMessage()}] [{$e->getCode()}] [{$e->getFile()}] [{$e->getLine()}] [{$traceJson}]"
-        );
+        $headers = json_encode($request->header());
+        $body = json_encode($request->all());
+        Log::error([
+            'request-id' => $request->header('x-request-id'),
+            'message' => "[ERROR] " . $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'header' => $headers,
+            'body' => $body,
+            'trace' => $traceJson
+        ]);
+    }
+
+    public function logInfo(Request $request, $data)
+    {
+        $headers = json_encode($request->header());
+        $body = json_encode($request->all());
+        Log::info([
+            'request-id' => $request->header('x-request-id'),
+            'message' => "[SUCCESS] ",
+            'data' => $data,
+            'header' => $headers,
+            'body' => $body,
+        ]);
     }
 }

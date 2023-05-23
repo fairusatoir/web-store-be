@@ -1,12 +1,11 @@
 @extends('layouts.default')
-
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Ubah barang
+                        Ubah Transaksi
                     </strong>
                     <small>{{ $item->name }}</small>
                 </div>
@@ -74,3 +73,14 @@
         </div>
     </div>
 @endsection
+
+@push('ckeditor')
+    <script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('.ckeditor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+@endpush

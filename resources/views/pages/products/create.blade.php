@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Tambah barang
+                        Tambah Barang
                     </strong>
                 </div>
                 <div class="card-body card-block">

@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Ubah barang
+                        Ubah Barang
                     </strong>
                     <small>{{ $item->name }}</small>
                 </div>

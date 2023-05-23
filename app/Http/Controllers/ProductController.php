@@ -50,7 +50,7 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($request->name);
             Product::create($data);
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request->header('x-request-id'), $e);
         }
         return redirect()->route('products.index');
     }
@@ -84,7 +84,7 @@ class ProductController extends Controller
             $item = Product::findOrFail($id);
             $item->update($data);
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request->header('x-request-id'), $e);
         }
         return redirect()->route('products.index');
     }
@@ -100,7 +100,7 @@ class ProductController extends Controller
 
             ProductGallery::where('products_id', $id)->delete();
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request->header('x-request-id'), $e);
         }
         return redirect()->route('products.index');
     }
@@ -118,7 +118,7 @@ class ProductController extends Controller
                     ->get()
             ]);
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request->header('x-request-id'), $e);
         }
     }
 }

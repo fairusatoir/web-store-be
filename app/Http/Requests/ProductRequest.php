@@ -29,4 +29,13 @@ class ProductRequest extends FormRequest
             'quantity' => 'required|max:255',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama wajib diisi.',
+            // 'email.required' => 'Email wajib diisi.',
+            // 'email.email' => 'Format email tidak valid.',
+        ];
+    }
 }

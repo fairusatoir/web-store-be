@@ -68,7 +68,7 @@
     </div>
 @endsection
 
-@push('inputfile')
+@push('afterjs')
     <script>
         const customFileInput = document.getElementById('customFile');
         const customFileLabel = document.getElementById('customFileLabel');

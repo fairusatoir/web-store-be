@@ -40,6 +40,7 @@
 
     {{-- script --}}
     @include('includes.script')
+    @stack('afterjs')
 </body>
 
 </html>

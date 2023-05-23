@@ -52,11 +52,11 @@ jobs:
         with:
           args:
             -Dsonar.projectKey=fairusatoir_web-store-be
-            -Dsonar.organization=fairusatoir
-            -Dsonar.sources=app
-            -Dsonar.tests=tests
-            -Dsonar.php.tests.reportPath=junit.xml
-            -Dsonar.php.coverage.reportPaths=coverage.xml
+#             -Dsonar.organization=fairusatoir
+#             -Dsonar.sources=app
+#             -Dsonar.tests=tests
+#             -Dsonar.php.tests.reportPath=junit.xml
+#             -Dsonar.php.coverage.reportPaths=coverage.xml
 
       - name: Execute tests
         run: vendor/bin/phpunit

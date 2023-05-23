@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddUUID
+class ValidateXRequestId
 {
     /**
      * Handle an incoming request.

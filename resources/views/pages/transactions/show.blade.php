@@ -24,12 +24,12 @@
         <td>
             @if ($data->transaction_status === 'FAILED')
                 <span class="badge badge-danger">
-                @elseif($data->transaction_status === 'SUCCESS')
-                    <span class="badge badge-info">
-                    @elseif($data->transaction_status === 'PENDING')
-                        <span class="badge badge-primary">
-                        @else
-                            <span>
+            @elseif($data->transaction_status === 'SUCCESS')
+                <span class="badge badge-info">
+            @elseif($data->transaction_status === 'PENDING')
+                <span class="badge badge-primary">
+            @else
+                <span>
             @endif
 
             {{ $data->transaction_status }}</span>

@@ -33,23 +33,22 @@
                                         <td>
                                             @switch($item->transaction_status)
                                                 @case('FAILED')
-                                                    <span class="badge badge-danger">
-                                                    @break
+                                                <span class="badge badge-danger">
+                                                @break
 
-                                                    @case('SUCCESS')
-                                                        <span class="badge badge-info">
-                                                        @break
+                                                @case('SUCCESS')
+                                                <span class="badge badge-info">
+                                                @break
 
-                                                        @case('PENDING')
-                                                            <span class="badge badge-warning">
-                                                            @break
+                                                @case('PENDING')
+                                                <span class="badge badge-warning">
+                                                @break
 
-                                                            @default
-                                                                <span>
-                                                            @endswitch
-
-                                                            {{ $item->transaction_status }}
-                                                        </span>
+                                                @default
+                                                <span>
+                                            @endswitch
+                                                    {{ $item->transaction_status }}
+                                                </span>
                                         </td>
                                         <td>
                                             @switch($item->transaction_status)
@@ -64,7 +63,6 @@
                                                     </a>
                                                 @break
                                             @endswitch
-                                            </span>
                                             <a href="#mymodal"
                                                 data-remote={{ route('transactions.show', ['transaction' => $item->id]) }}
                                                 data-toggle="modal" data-target="#mymodal"
@@ -86,18 +84,18 @@
                                             </form>
                                         </td>
                                     </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center p-5">
-                                                Data tidak tersedia
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center p-5">
+                                            Data tidak tersedia
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

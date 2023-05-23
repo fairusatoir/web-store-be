@@ -83,9 +83,15 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        try {
+            $item = Transaction::findOrFail($id);
+            $item->delete();
+        } catch (Exception $e) {
+            $this->logError($request, $e);
+        }
+        return redirect()->route('transactions.index');
     }
 
     /**
@@ -96,11 +102,10 @@ class TransactionController extends Controller
         try {
             $item = Transaction::findOrFail($id);
             $item->transaction_status = $request->status;
-            return $item;
             $item->save();
         } catch (Exception $e) {
             $this->logError($request, $e);
         }
-        // return redirect()->route('transactions.index');
+        return redirect()->route('transactions.index');
     }
 }

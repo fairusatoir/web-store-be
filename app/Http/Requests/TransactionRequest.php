@@ -24,7 +24,7 @@ class TransactionRequest extends FormRequest
         switch ($this->route()->getName()) {
             case 'transactions.set-status':
                 return [
-                    'transaction_status' => 'required|in:PENDING,SUCCESS,FAILED'
+                    'status' => 'required|in:PENDING,SUCCESS,FAILED'
                 ];
             default:
                 return [
@@ -32,8 +32,6 @@ class TransactionRequest extends FormRequest
                     'email' => 'required|email|max:255',
                     'number' => 'required|max:255',
                     'address' => 'required|max:255',
-                    'transaction_total' => 'required|numeric',
-                    'transaction_status' => 'required|in:PENDING,SUCCESS,FAILED'
                 ];
         }
     }

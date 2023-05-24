@@ -1,15 +1,19 @@
 name: SonarCloud Analysis
 
 on:
-  push:
-    branches:
-      - sit
-  pull_request:
-    branches:
-      - sit
-      - main
-  schedule:
-    - cron: "0 1 * * 6"
+  workflow_run:
+    workflows: ["FeatureTest"]
+    types:
+      - completed
+  # push:
+  #   branches:
+  #     - sit
+  # pull_request:
+  #   branches:
+  #     - sit
+  #     - main
+  # schedule:
+  #   - cron: "0 1 * * 6"
 
 jobs:
   sonarcloud:

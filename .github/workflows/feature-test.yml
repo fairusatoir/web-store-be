@@ -1,5 +1,5 @@
 # GitHub Action for Laravel with MySQL and Redis
-name: Testing Laravel with MySQL
+name: FeatureTest
 on:
   push:
     branches:
@@ -90,7 +90,10 @@ jobs:
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
       - name: Test with phpunit
-        run: vendor/bin/phpunit --coverage-text
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+
+      - name: Fix code coverage paths
+          run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml

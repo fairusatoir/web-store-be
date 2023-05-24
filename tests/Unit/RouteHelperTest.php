@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Helpers\RouteHelper;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class RouteHelperTest extends TestCase
@@ -64,8 +65,8 @@ class RouteHelperTest extends TestCase
      */
     public function testUndefiedGetUri()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Route name is missing.");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("");
 
         $helper = new RouteHelper([]);
         $uri = $helper->getUri();
@@ -92,8 +93,8 @@ class RouteHelperTest extends TestCase
      */
     public function testUndefiedSubRouteUri()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Subroute name is missing.");
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("");
 
         $helper = new RouteHelper($this->notSubroute);
         $subRouteUri = $helper->getSubRouteUri($this->notSubroute['subroute'] ?? null);

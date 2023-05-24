@@ -2,8 +2,6 @@ pull_request_rules:
   - name: automatic merge to sit when all checks pass
     conditions:
       - base=sit
-      - check-success=Laravel (PHP 8.1)
-      - check-success=Laravel (PHP 8.2)
     actions:
       merge:
         method: merge
@@ -16,8 +14,6 @@ pull_request_rules:
   - name: automatic merge dev to master
     conditions:
       - base=master
-      - check-success=Laravel (PHP 8.1)
-      - check-success=Laravel (PHP 8.2)
       - label=deploy
     actions:
       merge:

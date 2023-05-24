@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - sit
-      - main
+      - master
 jobs:
   laravel:
     name: Laravel (PHP ${{ matrix.php-versions }})

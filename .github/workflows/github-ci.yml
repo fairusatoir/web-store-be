@@ -94,7 +94,7 @@ jobs:
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
       - name: Check workspace files
-        run: ls -R /github/workspace
+        run: ls -R .
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

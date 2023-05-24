@@ -79,6 +79,8 @@ foreach ($pages as $page) {
                     // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'delete'
                     // ...
                     break;
+                default:
+                    break;
             }
         }
     }

@@ -109,8 +109,7 @@ class RouteHelper
         }
 
         $nameSubroute = Str::slug($subroute['name'], "-");
-        $name = $this->getUri() . '.' . $nameSubroute;
-        return $name;
+        return $this->getUri() . '.' . $nameSubroute;
     }
 
     /**

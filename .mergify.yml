@@ -16,8 +16,24 @@ pull_request_rules:
 
   - name: automatic pull request from sit to master
     conditions:
+      - base=sit
       - label=ready-to-master
     actions:
       backport:
         branches:
           - master
+          
+  - name: automatic merge backport to master
+    conditions:
+      - base=master
+      - label=deploy
+    actions:
+      merge:
+        method: merge
+        
+  - name: clean
+    conditions:
+      - base=master
+      - merged
+    actions:
+      delete_head_branch:

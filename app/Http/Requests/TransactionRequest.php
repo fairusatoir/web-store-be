@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductRequest extends FormRequest
+class TransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +21,19 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|max:255',
-            'slug' => 'required|max:255',
-            'type' => 'required|max:255',
-            'description' => 'required|max:255',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
-        ];
+        switch ($this->route()->getName()) {
+            case 'transactions.set-status':
+                return [
+                    'status' => 'required|in:PENDING,SUCCESS,FAILED'
+                ];
+            default:
+                return [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255',
+                    'number' => 'required|max:255',
+                    'address' => 'required|max:255',
+                ];
+        }
     }
 
     public function messages()
@@ -37,14 +41,7 @@ class ProductRequest extends FormRequest
         return [
             'name.required' => 'Nama wajib diisi.',
             // 'email.required' => 'Email wajib diisi.',
-            // 'email.email' => 'Format email tidak valid.',
+            'email.email' => 'Format email tidak valid.',
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'slug' => $this->filled('slug') ? Str::slug($this->input('name')) : false,
-        ]);
     }
 }

@@ -21,14 +21,12 @@ class ProductSeeder extends Seeder
             DB::beginTransaction();
             $limit = 5;
             for ($i = 0; $i < $limit; $i++) {
-                $name = Faker::create()->word;
                 Product::create([
-                    'name' => $name,
-                    'slug' => Str::slug($name),
+                    'name' => Faker::create()->word,
                     'type' => Faker::create()->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
                     'description' => Faker::create()->sentence,
-                    'price' => Faker::create()->randomFloat(2, 100, 999),
-                    'quantity' => Faker::create()->numberBetween(1, 100),
+                    'price' => Faker::create()->numberBetween(250000, 2250000),
+                    'quantity' => Faker::create()->numberBetween(300, 1000),
                 ]);
             }
             DB::commit();

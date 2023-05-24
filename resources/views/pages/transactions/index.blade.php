@@ -31,29 +31,38 @@
                                         <td>{{ $item->number }}</td>
                                         <td>{{ $item->transaction_total }}</td>
                                         <td>
-                                            @if ($item->transaction_status === 'FAILED')
+                                            @switch($item->transaction_status)
+                                                @case('FAILED')
                                                 <span class="badge badge-danger">
-                                                @elseif($item->transaction_status === 'SUCCESS')
-                                                    <span class="badge badge-info">
-                                                    @elseif($item->transaction_status === 'PENDING')
-                                                        <span class="badge badge-warning">
-                                                        @else
-                                                            <span>
-                                            @endif
+                                                @break
 
-                                            {{ $item->transaction_status }}</span>
+                                                @case('SUCCESS')
+                                                <span class="badge badge-info">
+                                                @break
+
+                                                @case('PENDING')
+                                                <span class="badge badge-warning">
+                                                @break
+
+                                                @default
+                                                <span>
+                                            @endswitch
+                                                    {{ $item->transaction_status }}
+                                                </span>
                                         </td>
                                         <td>
-                                            {{-- @if ($item->transaction_status === 'PENDING')
-                                                <a href="{{ route('transactions.status', ['transaction' => $item->id]) }}?status=SUCCESS"
-                                                    class="btn btn-success btn-sm">
-                                                    <i class="fa fa-check"></i>
-                                                </a>
-                                                <a href="{{ route('transactions.status', ['transaction' => $item->id]) }}?status=FAILED"
-                                                    class="btn btn-danger btn-sm">
-                                                    <i class="fa fa-times"></i>
-                                                </a>
-                                            @endif --}}
+                                            @switch($item->transaction_status)
+                                                @case('PENDING')
+                                                    <a href="{{ route('transactions.set-status', ['transaction' => $item->id]) }}?status=SUCCESS"
+                                                        class="btn btn-success btn-sm">
+                                                        <i class="fa fa-check"></i>
+                                                    </a>
+                                                    <a href="{{ route('transactions.set-status', ['transaction' => $item->id]) }}?status=FAILED"
+                                                        class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                @break
+                                            @endswitch
                                             <a href="#mymodal"
                                                 data-remote={{ route('transactions.show', ['transaction' => $item->id]) }}
                                                 data-toggle="modal" data-target="#mymodal"
@@ -61,11 +70,11 @@
                                                 class="btn btn-info btn-sm">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                            <a href={{ route('products.edit', ['product' => $item->id]) }}
+                                            <a href={{ route('transactions.edit', ['transaction' => $item->id]) }}
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
-                                            <form action={{ route('products.destroy', ['product' => $item->id]) }}
+                                            <form action={{ route('transactions.destroy', ['transaction' => $item->id]) }}
                                                 method="post" class="d-inline">
                                                 @method('delete')
                                                 @csrf

@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Tambah barang
+                        Tambah Barang
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -72,7 +72,7 @@
     </div>
 @endsection
 
-@push('ckeditor')
+@push('afterjs')
     <script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
     <script>
         ClassicEditor

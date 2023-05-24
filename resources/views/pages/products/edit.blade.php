@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Ubah barang
+                        Ubah Barang
                     </strong>
                     <small>{{ $item->name }}</small>
                 </div>
@@ -74,7 +74,7 @@
     </div>
 @endsection
 
-@push('ckeditor')
+@push('afterjs')
     <script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
     <script>
         ClassicEditor

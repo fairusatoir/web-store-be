@@ -29,13 +29,26 @@ class ProductTest extends TestCase
     }
 
     /**
+     * Test case for the create method of ProductController.
+     *
+     * @return void
+     */
+    public function testCreate()
+    {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/products/create');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('pages.products.create');
+    }
+
+    /**
      * Test storing a new product.
      *
      * @return void
      */
     public function testStore()
     {
-        $user = User::factory()->create();
         $productData = [
             'name' => $this->faker->word,
             'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
@@ -44,11 +57,36 @@ class ProductTest extends TestCase
             'quantity' => $this->faker->numberBetween(300, 1000),
         ];
 
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->post('/products', $productData);
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
         $this->assertDatabaseHas('products', $productData);
+    }
+
+    /**
+     * Test case for the edit method of ProductController.
+     *
+     * @return void
+     */
+    public function testEdit()
+    {
+        $product = Product::factory()->create([
+            'name' => $this->faker->word,
+            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->numberBetween(250000, 2250000),
+            'quantity' => $this->faker->numberBetween(300, 1000),
+        ]);
+
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/products/' . $product->id . '/edit');
+
+
+        $response->assertStatus(200);
+        $response->assertViewIs('pages.products.edit');
+        $response->assertViewHas('item');
     }
 
     /**
@@ -58,7 +96,6 @@ class ProductTest extends TestCase
      */
     public function testUpdate()
     {
-        $user = User::factory()->create();
         $product = Product::factory()->create([
             'name' => $this->faker->word,
             'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
@@ -75,6 +112,7 @@ class ProductTest extends TestCase
             'quantity' => $this->faker->numberBetween(300, 1000),
         ];
 
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->put('/products/' . $product->id, $updatedData);
 
         $response->assertStatus(302);
@@ -89,7 +127,6 @@ class ProductTest extends TestCase
      */
     public function testDestroy()
     {
-        $user = User::factory()->create();
         $product = Product::factory()->create([
             'name' => $this->faker->word,
             'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
@@ -98,10 +135,35 @@ class ProductTest extends TestCase
             'quantity' => $this->faker->numberBetween(300, 1000),
         ]);
 
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->delete('/products/' . $product->id);
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
         $this->assertSoftDeleted('products', ['id' => $product->id]);
+    }
+
+    /**
+     * Test case for the gallery method of ProductController.
+     *
+     * @return void
+     */
+    public function testGallery()
+    {
+        $product = Product::factory()->create([
+            'name' => $this->faker->word,
+            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->numberBetween(250000, 2250000),
+            'quantity' => $this->faker->numberBetween(300, 1000),
+        ]);
+
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->get('/products/' . $product->id . '/gallery');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('pages.products.gallery');
+        $response->assertViewHas('product');
+        $response->assertViewHas('data');
     }
 }

@@ -1,0 +1,21 @@
+pull_request_rules:
+  - name: automatic merge to sit when all checks pass
+    conditions:
+      - base=sit
+      - check-success=*
+    actions:
+      merge:
+        method: merge
+      comment:
+        message: Thank you for your contribution @{{author}}
+      label:
+        add:
+          - ready-to-master
+
+  - name: automatic pull request from sit to master
+    conditions:
+      - label=ready-to-master
+    actions:
+      backport:
+        branches:
+          - master

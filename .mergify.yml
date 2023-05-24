@@ -4,7 +4,6 @@ pull_request_rules:
       - base=sit
       - check-success=Laravel (PHP 8.1)
       - check-success=Laravel (PHP 8.2)
-      - check-success=SonarCloud
     actions:
       merge:
         method: merge
@@ -14,26 +13,12 @@ pull_request_rules:
         add:
           - ready-to-master
 
-  - name: automatic pull request from sit to master
-    conditions:
-      - base=sit
-      - label=ready-to-master
-    actions:
-      backport:
-        branches:
-          - master
-          
-  - name: automatic merge backport to master
+  - name: automatic merge dev to master
     conditions:
       - base=master
+      - check-success=Laravel (PHP 8.1)
+      - check-success=Laravel (PHP 8.2)
       - label=deploy
     actions:
       merge:
         method: merge
-        
-  - name: clean
-    conditions:
-      - base=master
-      - merged
-    actions:
-      delete_head_branch:

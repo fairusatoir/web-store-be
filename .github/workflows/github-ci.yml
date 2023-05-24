@@ -93,11 +93,14 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
-      - name: Check workspace files
-        run: ls -R .
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
+      - name: Check Coverage files
+        run: ls -R coverage
+        
+      - name: Check junit files
+        run: ls -R tests

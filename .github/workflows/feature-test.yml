@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - sit
-      - main
+      - master
 jobs:
   laravel:
     name: Laravel (PHP ${{ matrix.php-versions }})
@@ -96,4 +96,4 @@ jobs:
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
       - name: Fix code coverage paths
-          run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
+        run: sed -i 's@'$GITHUB_WORKSPACE'@/.github/workspace/@g' coverage.xml

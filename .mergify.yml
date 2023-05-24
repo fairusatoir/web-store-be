@@ -2,7 +2,9 @@ pull_request_rules:
   - name: automatic merge to sit when all checks pass
     conditions:
       - base=sit
-      - check-success=.
+      - check-success=Laravel (PHP 8.1)
+      - check-success=Laravel (PHP 8.2)
+      - check-success=SonarCloud
     actions:
       merge:
         method: merge

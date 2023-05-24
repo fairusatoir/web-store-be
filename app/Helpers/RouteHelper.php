@@ -28,8 +28,8 @@ class RouteHelper
      */
     public function __construct(array $route)
     {
-        $this->name = $route['name'];
-        $this->subroute = $route['subroute'] ?? null;
+        $this->name = isset($route['name']) ? $route['name'] : null;
+        $this->subroute = isset($route['subroute']) ? $route['subroute'] : null;
     }
 
     /**
@@ -37,6 +37,10 @@ class RouteHelper
      */
     public function getUri(): string
     {
+        if (!isset($this->name)) {
+            throw new \InvalidArgumentException("Route name is missing.");
+        }
+
         $name = $this->name;
         $name = Str::slug($name, "-");
         $yLast = strrpos($name, 'y');
@@ -51,8 +55,12 @@ class RouteHelper
      * @param array $subroute The subroute information.
      * @return string The generated URI.
      */
-    function getSubRouteUri(array $subroute): string
+    function getSubRouteUri(array $subroute = null): string
     {
+        if (!isset($subroute['name'])) {
+            throw new \InvalidArgumentException("Subroute name is missing.");
+        }
+
         $uri = $this->getUri() . '/';
         $name = Str::slug($subroute['name'], "-");
 
@@ -81,6 +89,10 @@ class RouteHelper
      */
     public function getSubController(array $subroute): string
     {
+        if (!isset($subroute['name'])) {
+            throw new \InvalidArgumentException("Subroute name is missing.");
+        }
+
         $controller = $this->getController();
         $controller .= '@' . $this->toCamelCase($subroute['name']);
         return $controller;
@@ -91,6 +103,10 @@ class RouteHelper
      */
     public function getNameSubroute(array $subroute): string
     {
+        if (!isset($subroute['name'])) {
+            throw new \InvalidArgumentException("Subroute name is missing.");
+        }
+
         $nameSubroute = Str::slug($subroute['name'], "-");
         $name = $this->getUri() . '.' . $nameSubroute;
         return $name;

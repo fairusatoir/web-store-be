@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Str;
+use App\Helpers\RouteHelper;
+use Mockery\Generator\Method;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-use Mockery\Generator\Method;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
@@ -28,7 +28,7 @@ Auth::routes(['register' => false]);
 $pages = [
     [
         'name' => 'Product',
-        'route' => [
+        'subroute' => [
             [
                 'name' => 'gallery',
                 'method' => 'get',
@@ -41,34 +41,44 @@ $pages = [
     ],
     [
         'name' => 'Transaction',
+        'subroute' => [
+            [
+                'name' => 'set status',
+                'method' => 'get',
+                'params' => 'transaction'
+            ]
+        ]
     ],
 ];
 
 foreach ($pages as $page) {
-    $controller = 'App\\Http\\Controllers\\' . str_replace(" ", "", $page['name']) . 'Controller';
-    $uri = str_replace("y", "ie", Str::slug($page['name'], "-") . "s");
-    Route::resource($uri, $controller);
-    if (isset($page['route'])) {
-        foreach ($page['route'] as $route_extra) {
-            switch ($route_extra['method']) {
+
+    $route = new RouteHelper($page);
+
+    Route::resource(
+        $route->getUri(),
+        $route->getController()
+    );
+
+    if ($route->subrouteExist()) {
+        foreach ($route->getSubroute() as $subroute) {
+            switch ($subroute['method']) {
                 case 'get':
                     Route::get(
-                        isset($route_extra['params']) ?
-                            $uri . '/' . $route_extra['name'] . '/{' . $route_extra['params'] . '}'
-                            : $uri . '/' . $route_extra['name'],
-                        $controller . '@' . $route_extra['name']
-                    )->name($uri . '.' . $route_extra['name']);
+                        $route->getSubRouteUri($subroute),
+                        $route->getSubController($subroute)
+                    )->name($route->getNameSubroute($subroute));
                     break;
                 case 'post':
-                    // Kode yang akan dijalankan jika $route_extra['method'] sama dengan 'post'
+                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'post'
                     // ...
                     break;
                 case 'put':
-                    // Kode yang akan dijalankan jika $route_extra['method'] sama dengan 'put'
+                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'put'
                     // ...
                     break;
                 case 'delete':
-                    // Kode yang akan dijalankan jika $route_extra['method'] sama dengan 'delete'
+                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'delete'
                     // ...
                     break;
             }

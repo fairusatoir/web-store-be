@@ -65,7 +65,7 @@ class ProductGalleryController extends Controller
             $data['photo'] = $path;
             ProductGallery::create($data);
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request, $e);
         }
         return redirect()->route('product-galleries.index');
     }
@@ -103,7 +103,7 @@ class ProductGalleryController extends Controller
             $item = ProductGallery::findOrFail($id);
             $item->delete();
         } catch (Exception $e) {
-            $this->logError($request->header('X-Request-ID'), $e);
+            $this->logError($request, $e);
         }
         return redirect()->route('product-galleries.index');
     }

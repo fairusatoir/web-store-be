@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Tambah foto barang
+                        Tambah Foto barang
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -68,7 +68,7 @@
     </div>
 @endsection
 
-@push('inputfile')
+@push('afterjs')
     <script>
         const customFileInput = document.getElementById('customFile');
         const customFileLabel = document.getElementById('customFileLabel');

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddUUID
+class ValidateXRequestId
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,8 @@ class AddUUID
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->header('X-Request-ID')) {
-            $request->headers->add(['X-Request-ID' => Str::uuid()]);
+        if (!$request->header('x-request-id')) {
+            $request->headers->add(['x-request-id' => Str::uuid()]);
         }
         return $next($request);
     }

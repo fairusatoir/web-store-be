@@ -55,7 +55,7 @@ class RouteHelper
      * @param array $subroute The subroute information.
      * @return string The generated URI.
      */
-    function getSubRouteUri(array $subroute = null): string
+    public function getSubRouteUri(array $subroute = null): string
     {
         if (!isset($subroute['name'])) {
             throw new \InvalidArgumentException("Subroute name is missing.");

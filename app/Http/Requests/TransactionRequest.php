@@ -21,19 +21,12 @@ class TransactionRequest extends FormRequest
      */
     public function rules(): array
     {
-        switch ($this->route()->getName()) {
-            case 'transactions.set-status':
-                return [
-                    'status' => 'required|in:PENDING,SUCCESS,FAILED'
-                ];
-            default:
-                return [
-                    'name' => 'required|max:255',
-                    'email' => 'required|email|max:255',
-                    'number' => 'required|max:255',
-                    'address' => 'required|max:255',
-                ];
-        }
+        $validator = match ($this->route()->getName()) {
+            'transactions.set-status' => new TransactionSetStatus(),
+            default => new TransactionDefaultRule(),
+        };
+
+        return $validator->rules();
     }
 
     public function messages()

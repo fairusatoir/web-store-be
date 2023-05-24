@@ -23,8 +23,6 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 // @phpstan-ignore-next-line
 Auth::routes(['register' => false]);
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 $pages = [
     [
         'name' => 'Product',

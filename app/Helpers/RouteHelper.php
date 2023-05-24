@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class RouteHelper
 {
@@ -38,7 +39,7 @@ class RouteHelper
     public function getUri(): string
     {
         if (!isset($this->name)) {
-            throw new \InvalidArgumentException("Route name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $name = $this->name;
@@ -58,7 +59,7 @@ class RouteHelper
     public function getSubRouteUri(array $subroute = null): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $uri = $this->getUri() . '/';
@@ -90,7 +91,7 @@ class RouteHelper
     public function getSubController(array $subroute): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $controller = $this->getController();
@@ -104,7 +105,7 @@ class RouteHelper
     public function getNameSubroute(array $subroute): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $nameSubroute = Str::slug($subroute['name'], "-");

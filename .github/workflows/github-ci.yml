@@ -1,7 +1,7 @@
 name: github-ci
 
 on:
-  pull_request:
+  push:
     branches:
       - sit
       - master
@@ -86,7 +86,7 @@ jobs:
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
 
       - name: Test with phpunit
-        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage/coverage.xml --log-junit=tests/junit.xml
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=github/workspace/coverage/coverage.xml --log-junit=tests/junit.xml
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}

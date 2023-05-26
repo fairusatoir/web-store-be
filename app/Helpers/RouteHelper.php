@@ -86,6 +86,17 @@ class RouteHelper
     }
 
     /**
+     * Get the API controller class name based on the given name.
+     */
+    public function getApiController(): string
+    {
+        $name = $this->name;
+        $name = str_replace(" ", "", $name);
+        $name = 'App\\Http\\Controllers\\API\\' . $name . 'Controller';
+        return $name;
+    }
+
+    /**
      * Get the controller class name and method based on the given sub route name.
      */
     public function getSubController(array $subroute): string

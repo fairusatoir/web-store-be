@@ -114,6 +114,19 @@ class RouteHelperTest extends TestCase
     }
 
     /**
+     * Test the getController method.
+     *
+     * @return void
+     */
+    public function testGetApiController()
+    {
+        $helper = new RouteHelper($this->route);
+        $controller = $helper->getApiController();
+
+        $this->assertEquals('App\Http\Controllers\API\ProductGalleryController', $controller);
+    }
+
+    /**
      * Test the getSubController method.
      *
      * @return void

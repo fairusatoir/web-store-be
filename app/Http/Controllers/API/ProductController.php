@@ -14,7 +14,6 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-
         $name = $request->input('name');
         $type = $request->input('type');
         $priceFrom = $request->input('pricefrom', 0);
@@ -22,7 +21,7 @@ class ProductController extends Controller
         $orderBy = $request->input('orderby', 'name');
         $limit = $request->input('limit', '10');
 
-        $data = Product::select('*')
+        $data = Product::with('galleries')
             ->when(!is_null($name), function ($query) use ($name) {
                 return $query->where('name', 'like', '%' . $name . '%');
             })
@@ -31,11 +30,12 @@ class ProductController extends Controller
             })
             ->where('price', '>', $priceFrom)
             ->where('price', '<', $priceTo)
-            ->with('galleries')
             ->orderBy($orderBy)
             ->paginate($limit);
 
-        return ApiFormatter::success($data, 'Data Produk Berhasil diambil!');
+        return response()->json(
+            ApiFormatter::success($data, 'Data Produk Berhasil diambil!')
+        );
     }
 
     /**

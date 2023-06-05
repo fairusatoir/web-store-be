@@ -26,7 +26,8 @@ Auth::routes(['register' => false]);
 $pages = [
     [
         'name' => 'Product',
-        'subroute' => [
+        'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy'],
+        'nested' => [
             [
                 'name' => 'gallery',
                 'method' => 'get',
@@ -39,7 +40,8 @@ $pages = [
     ],
     [
         'name' => 'Transaction',
-        'subroute' => [
+        'only' => ['index', 'show', 'edit', 'update', 'destroy'],
+        'nested' => [
             [
                 'name' => 'set status',
                 'method' => 'get',
@@ -56,9 +58,9 @@ foreach ($pages as $page) {
     Route::resource(
         $route->getUri(),
         $route->getController()
-    );
+    )->only($page['only'] ?? null);
 
-    if ($route->subrouteExist()) {
+    if ($route->nestedExist()) {
         foreach ($route->getSubroute() as $subroute) {
             switch ($subroute['method']) {
                 case 'get':

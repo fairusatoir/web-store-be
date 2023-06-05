@@ -22,7 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 $pages = [
     [
         'name' => 'Product',
-        'except' => ['create', 'store', 'edit'],
         'only' => ['index'],
     ],
     [
@@ -39,10 +38,9 @@ foreach ($pages as $page) {
         $route->getUri(),
         $route->getApiController()
     )
-        ->only($page['only'] ?? '')
-        ->except($page['except'] ?? '');
+        ->only($page['only'] ?? '');
 
-    if ($route->subrouteExist()) {
+    if ($route->nestedExist()) {
         foreach ($route->getSubroute() as $subroute) {
             switch ($subroute['method']) {
                 case 'get':

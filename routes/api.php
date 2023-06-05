@@ -22,6 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 $pages = [
     [
         'name' => 'Product',
+        'except' => ['create', 'store', 'edit'],
+        'only' => ['index'],
+    ],
+    [
+        'name' => 'Checkout',
+        'only' => ['store'],
     ]
 ];
 
@@ -32,7 +38,9 @@ foreach ($pages as $page) {
     Route::resource(
         $route->getUri(),
         $route->getApiController()
-    )->except(['create', 'store', 'edit']);;
+    )
+        ->only($page['only'] ?? '')
+        ->except($page['except'] ?? '');
 
     if ($route->subrouteExist()) {
         foreach ($route->getSubroute() as $subroute) {

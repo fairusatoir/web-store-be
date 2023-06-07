@@ -37,8 +37,7 @@ foreach ($pages as $page) {
     Route::resource(
         $route->getUri(),
         $route->getApiController()
-    )
-        ->only($page['only'] ?? '');
+    )->only($page['only'] ?? '');
 
     if ($route->nestedExist()) {
         foreach ($route->getSubroute() as $subroute) {

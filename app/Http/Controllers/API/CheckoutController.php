@@ -25,7 +25,7 @@ class CheckoutController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CheckoutRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
@@ -40,22 +40,28 @@ class CheckoutController extends Controller
 
                 $details[] = new TransactionDetail([
                     'transactions_id' => $transaction->id,
-                    'products_id' => $product,
+                    'products_id' => $product->id,
                 ]);
 
                 $product->decrement('quantity');
                 $product->save();
             }
 
-            $transaction->details->saveMany($details);
+            $transaction->details()->saveMany($details);
 
             DB::commit();
-            ApiFormatter::success($transaction, 'Transaksi Berhasil!');
+
+            return $transaction;
+            return response()->json(
+                ApiFormatter::success($transaction, 'Transaksi Berhasil!')
+            );
         } catch (Exception $th) {
             //throw $th;
             DB::rollBack();
             $this->logError($request, $th);
-            ApiFormatter::error($th->getMessage());
+            return response()->json(
+                ApiFormatter::error($th->getMessage())
+            );
         }
     }
 

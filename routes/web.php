@@ -37,6 +37,7 @@ $pages = [
     ],
     [
         'name' => 'Product Gallery',
+        'only' => ['index', 'create', 'store', 'destroy'],
     ],
     [
         'name' => 'Transaction',

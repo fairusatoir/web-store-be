@@ -35,6 +35,21 @@ class ApiFormatter
     }
 
     /**
+     * Get the Error attributes from the parameters.
+     *
+     * @return array The Error attributes.
+     */
+    protected static function getErrorAttr($meta)
+    {
+        $attributes = [
+            'meta' => $meta,
+            'data' => null,
+        ];
+
+        return $attributes;
+    }
+
+    /**
      * Create a formatted API response.
      *
      * @param  mixed $status
@@ -50,7 +65,8 @@ class ApiFormatter
             'status_code' => $statusCode,
             'status' => $status,
         ];
-        return self::getPageAttr($data, $meta);
+
+        return $status == 'error' ? self::getErrorAttr($meta) : self::getPageAttr($data, $meta);
     }
 
     /**

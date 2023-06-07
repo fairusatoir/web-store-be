@@ -6,47 +6,25 @@ use Illuminate\Http\JsonResponse;
 
 class ApiFormatter
 {
-    /**
-     * Get the pagination attributes from the given paginated items.
-     *
-     * @param \Illuminate\Pagination\LengthAwarePaginator $items The paginated items.
-     *
-     * @return array The pagination attributes.
-     */
-    protected static function getPageAttr($items, $meta)
-    {
-        $pagination_attributes = [
-            'meta' => $meta,
-            'data' => $items->items(),
-            'current_page' => $items->currentPage(),
-            'first_page_url' => $items->url(1),
-            'from' => $items->firstItem(),
-            'last_page' => $items->lastPage(),
-            'last_page_url' => $items->url($items->lastPage()),
-            'next_page_url' => $items->nextPageUrl(),
-            'path' => $items->path(),
-            'per_page' => $items->perPage(),
-            'prev_page_url' => $items->previousPageUrl(),
-            'to' => $items->lastItem(),
-            'total' => $items->total(),
-        ];
 
-        return $pagination_attributes;
-    }
 
     /**
-     * Get the Error attributes from the parameters.
+     * Create a Meta API response
      *
-     * @return array The Error attributes.
+     * @param  mixed $data
+     * @param  mixed $message
+     * @param  mixed $statusCode
+     * @return array
      */
-    protected static function getErrorAttr($meta)
+    protected static function createMetaResponse($message, $statusCode, $status): array
     {
-        $attributes = [
-            'meta' => $meta,
-            'data' => null,
+        $meta = [
+            'message' => $message,
+            'status_code' => $statusCode,
+            'status' => $status,
         ];
 
-        return $attributes;
+        return $meta;
     }
 
     /**
@@ -60,13 +38,12 @@ class ApiFormatter
      */
     protected static function createResponse($status, $data, $message, $statusCode)
     {
-        $meta = [
-            'message' => $message,
-            'status_code' => $statusCode,
-            'status' => $status,
+        $response = [
+            'meta' => self::createMetaResponse($message, $statusCode, $status),
+            'data' => $data,
         ];
 
-        return $status == 'error' ? self::getErrorAttr($meta) : self::getPageAttr($data, $meta);
+        return $response;
     }
 
     /**
@@ -88,8 +65,16 @@ class ApiFormatter
      * @param  mixed $statusCode
      * @return array
      */
-    public static function error($message = null, $statusCode = 400)
+    public static function error($message = null, $statusCode = 500)
     {
-        return self::createResponse('error', null, $message, $statusCode);
+        switch ($statusCode) {
+            case '404':
+                $meta_msg = "BussinessError";
+                break;
+            default:
+                $meta_msg = "Error";
+                break;
+        }
+        return self::createResponse($meta_msg, null, $message, $statusCode);
     }
 }

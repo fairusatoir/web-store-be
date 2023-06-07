@@ -27,6 +27,10 @@ $pages = [
     [
         'name' => 'Checkout',
         'only' => ['store'],
+    ],
+    [
+        'name' => 'Transaction',
+        'only' => ['index', 'show'],
     ]
 ];
 

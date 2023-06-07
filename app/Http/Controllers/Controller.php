@@ -41,4 +41,8 @@ class Controller extends BaseController
             'body' => $body,
         ]);
     }
+
+    public function is_null(mixed $val){
+        return !$val;
+    }
 }

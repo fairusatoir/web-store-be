@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Exception;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
@@ -10,7 +11,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CheckoutRequest;
-use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CheckoutController extends Controller
 {
@@ -25,7 +26,7 @@ class CheckoutController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CheckoutRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -34,9 +35,9 @@ class CheckoutController extends Controller
 
             $transaction = Transaction::create($data);
 
-            foreach ($request->transaction_details as $product) {
+            foreach ($request->transaction_details as $product_id) {
 
-                $product = Product::findOrFail($product);
+                $product = Product::findOrFail($product_id);
 
                 $details[] = new TransactionDetail([
                     'transactions_id' => $transaction->id,
@@ -51,9 +52,14 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            return $transaction;
             return response()->json(
-                ApiFormatter::success($transaction, 'Transaksi Berhasil!')
+                ApiFormatter::success($transaction, 'Transaksi Berhasil!', 201)
+            );
+        } catch (ModelNotFoundException $th) {
+            DB::rollBack();
+            $this->logError($request, $th);
+            return response()->json(
+                ApiFormatter::error("Produk {$product_id} tidak ada!", 404)
             );
         } catch (Exception $th) {
             //throw $th;

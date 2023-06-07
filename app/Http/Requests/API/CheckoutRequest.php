@@ -11,7 +11,7 @@ class CheckoutRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,6 +29,7 @@ class CheckoutRequest extends FormRequest
             'transaction_total' => 'required|integer',
             'transaction_status' => 'nullable|string|in:PENDING,SUCCESS,FAILED',
             'transaction_detail' => 'required|array',
+            'transaction_detail.*' => 'integer|exists:products,id',
         ];
     }
 }

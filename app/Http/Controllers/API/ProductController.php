@@ -16,21 +16,29 @@ class ProductController extends Controller
     {
         $name = $request->input('name');
         $type = $request->input('type');
-        $priceFrom = $request->input('pricefrom', 0);
-        $priceTo = $request->input('priceto', 999999999999999999);
-        $orderBy = $request->input('orderby', 'name');
-        $limit = $request->input('limit', '10');
+        $priceFrom = $request->input('pricefrom');
+        $priceTo = $request->input('priceto');
+        $orderBy = $request->input('orderby');
+        $limit = $request->input('limit', 10);
 
         $data = Product::with('galleries')
-            ->when(!is_null($name), function ($query) use ($name) {
+            ->when(!$this->is_null($name), function ($query) use ($name) {
                 return $query->where('name', 'like', '%' . $name . '%');
             })
-            ->when(!is_null($type), function ($query) use ($type) {
+            ->when(!$this->is_null($type), function ($query) use ($type) {
                 return $query->where('type', 'like', '%' . $type . '%');
             })
-            ->where('price', '>', $priceFrom)
-            ->where('price', '<', $priceTo)
-            ->orderBy($orderBy)
+            ->when(!$this->is_null($priceFrom), function ($query) use ($priceFrom) {
+                return $query->where('price', '>', $priceFrom);
+            })
+            ->when(!$this->is_null($priceTo), function ($query) use ($priceTo) {
+                return $query->where('price', '<', $priceTo);
+            })
+            ->when(!$this->is_null($orderBy), function ($query) use ($orderBy) {
+                return $query->orderBy($orderBy);
+            }, function ($query) {
+                $query->orderBy('name');
+            })
             ->paginate($limit);
 
         return response()->json(

@@ -6,8 +6,6 @@ use Illuminate\Http\JsonResponse;
 
 class ApiFormatter
 {
-
-
     /**
      * Create a Meta API response
      *
@@ -73,6 +71,7 @@ class ApiFormatter
                 break;
             default:
                 $meta_msg = "Error";
+                $message = EnvHelper::useProduction() ? "Somethings is wrong" : $message;
                 break;
         }
         return self::createResponse($meta_msg, null, $message, $statusCode);

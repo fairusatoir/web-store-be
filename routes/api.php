@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 $pages = [
     [
         'name' => 'Product',
-        'only' => ['index'],
+        'only' => ['index', 'show'],
     ],
     [
         'name' => 'Checkout',

@@ -55,7 +55,7 @@ class ProductController extends Controller
                 ->paginate($limit);
 
             Log::info(
-                "[END][Get All Product]",
+                "[SUCCESS][Get All Product]",
                 [
                     'response' => $data,
                 ]

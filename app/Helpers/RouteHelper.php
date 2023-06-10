@@ -140,7 +140,7 @@ class RouteHelper
      */
     public function getSubroute(): array
     {
-        return $this->nested;
+        return $this->nested ?? [];
     }
 
     /**

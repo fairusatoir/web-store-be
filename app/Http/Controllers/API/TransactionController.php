@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -14,18 +15,39 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return response()->json(
-                ApiFormatter::success(
-                    Transaction::with('details.product')->paginate(10),
-                    "Data Transaksi berhasil diambil"
-                )
+            Log::info(
+                "[BEGIN][Get All Transactions]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all()
+                ]
             );
-        } catch (Exception $th) {
+
+            $transactions = Transaction::with('details.product')->paginate(10);
+
+            Log::info(
+                "[SUCCESS][Get All Transactions]",
+                [
+                    'response' => $transactions,
+                ]
+            );
+
             return response()->json(
-                ApiFormatter::error($th->getMessage())
+                ApiFormatter::success($transactions, "Data Transaksi berhasil diambil!")
+            );
+        } catch (Exception $e) {
+            Log::error(
+                "[ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+
+            return response()->json(
+                ApiFormatter::error($e->getMessage())
             );
         }
     }
@@ -41,22 +63,39 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $trx)
     {
         try {
-            return response()->json(
-                ApiFormatter::success(
-                    Transaction::with('details.product')->findOrFail($id),
-                    "Data Transaksi berhasil diambil"
-                )
+            Log::info(
+                "[BEGIN][Get {$trx} Transaction]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all()
+                ]
             );
-        } catch (ModelNotFoundException $th) {
-            return response()->json(
-                ApiFormatter::error("Produk tidak ada!", 404)
+
+            $transaction = Transaction::with('details.product')->where('uuid', $trx)->get();
+
+            Log::info(
+                "[SUCCESS][Get {$trx} Transaction]",
+                [
+                    'response' => $transaction,
+                ]
             );
-        } catch (Exception $th) {
+
             return response()->json(
-                ApiFormatter::error($th->getMessage())
+                ApiFormatter::success($transaction, "Data Transaksi {$trx} berhasil diambil!")
+            );
+        } catch (Exception $e) {
+            Log::error(
+                "[ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+
+            return response()->json(
+                ApiFormatter::error($e->getMessage())
             );
         }
     }

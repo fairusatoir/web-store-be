@@ -18,7 +18,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 // @phpstan-ignore-next-line
 Auth::routes(['register' => false]);
@@ -59,7 +59,7 @@ foreach ($pages as $page) {
     Route::resource(
         $route->getUri(),
         $route->getController()
-    )->only($page['only'] ?? null);
+    )->only($page['only'] ?? null)->middleware('auth');
 
     if ($route->nestedExist()) {
         foreach ($route->getSubroute() as $subroute) {
@@ -68,7 +68,7 @@ foreach ($pages as $page) {
                     Route::get(
                         $route->getSubRouteUri($subroute),
                         $route->getSubController($subroute)
-                    )->name($route->getNameSubroute($subroute));
+                    )->name($route->getNameSubroute($subroute))->middleware('auth');
                     break;
                 case 'post':
                     // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'post'

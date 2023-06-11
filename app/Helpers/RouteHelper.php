@@ -16,11 +16,11 @@ class RouteHelper
     private $name;
 
     /**
-     * The array of sub-routers data.
+     * The array of nested sub-routers data.
      *
      * @var array
      */
-    private $subroute;
+    private $nested;
 
     /**
      * Create a new controller instance.
@@ -30,7 +30,7 @@ class RouteHelper
     public function __construct(array $route)
     {
         $this->name = isset($route['name']) ? $route['name'] : null;
-        $this->subroute = isset($route['subroute']) ? $route['subroute'] : null;
+        $this->nested = isset($route['nested']) ? $route['nested'] : null;
     }
 
     /**
@@ -86,6 +86,17 @@ class RouteHelper
     }
 
     /**
+     * Get the API controller class name based on the given name.
+     */
+    public function getApiController(): string
+    {
+        $name = $this->name;
+        $name = str_replace(" ", "", $name);
+        $name = 'App\\Http\\Controllers\\API\\' . $name . 'Controller';
+        return $name;
+    }
+
+    /**
      * Get the controller class name and method based on the given sub route name.
      */
     public function getSubController(array $subroute): string
@@ -117,9 +128,9 @@ class RouteHelper
      *
      * @return bool
      */
-    public function subrouteExist()
+    public function nestedExist()
     {
-        return isset($this->subroute) ? true : false;
+        return isset($this->nested) ? true : false;
     }
 
     /**
@@ -129,7 +140,7 @@ class RouteHelper
      */
     public function getSubroute(): array
     {
-        return $this->subroute;
+        return $this->nested ?? [];
     }
 
     /**

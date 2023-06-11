@@ -26,4 +26,8 @@ Command to make Model
 php artisan make:migration create_products_table --create=products
 ```
 
+### Make Unit test
 
+```shell
+php artisan test --env=testing --filter ControllerTest
+```

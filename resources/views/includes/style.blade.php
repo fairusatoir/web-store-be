@@ -69,4 +69,14 @@
     .ck-editor__editable {
         min-height: 250px;
     }
+
+    .btn-link {
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+        color: #007bff;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 </style>

@@ -18,7 +18,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testIndex()
+    public function test_product_get_all_page()
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/products');
@@ -33,7 +33,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testCreate()
+    public function test_product_create_page()
     {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get('/products/create');
@@ -47,7 +47,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testStore()
+    public function test_product_store()
     {
         $productData = [
             'name' => $this->faker->word,
@@ -70,7 +70,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testEdit()
+    public function test_product_edit_page()
     {
         $product = Product::factory()->create([
             'name' => $this->faker->word,
@@ -94,7 +94,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testUpdate()
+    public function test_product_update()
     {
         $product = Product::factory()->create([
             'name' => $this->faker->word,
@@ -125,7 +125,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testDestroy()
+    public function test_product_delete()
     {
         $product = Product::factory()->create([
             'name' => $this->faker->word,
@@ -148,7 +148,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testGallery()
+    public function test_product_gallery_page()
     {
         $product = Product::factory()->create([
             'name' => $this->faker->word,

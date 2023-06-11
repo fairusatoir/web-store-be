@@ -32,13 +32,15 @@ class ApiFormatter
      * @param  mixed $data
      * @param  mixed $message
      * @param  mixed $statusCode
+     * @param  mixed $error
      * @return array
      */
-    protected static function createResponse($status, $data, $message, $statusCode)
+    protected static function createResponse($status, $data, $message, $statusCode, $error = null)
     {
         $response = [
             'meta' => self::createMetaResponse($message, $statusCode, $status),
             'data' => $data,
+            'error' => $error
         ];
 
         return $response;
@@ -63,7 +65,7 @@ class ApiFormatter
      * @param  mixed $statusCode
      * @return array
      */
-    public static function error($message = null, $statusCode = 500)
+    public static function error($message = null, $statusCode = 500, $error = null)
     {
         switch ($statusCode) {
             case '404':
@@ -74,6 +76,6 @@ class ApiFormatter
                 $message = EnvHelper::useProduction() ? "Somethings is wrong" : $message;
                 break;
         }
-        return self::createResponse($meta_msg, null, $message, $statusCode);
+        return self::createResponse($meta_msg, null, $message, $statusCode, $error);
     }
 }

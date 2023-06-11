@@ -53,7 +53,7 @@ class ApiTransactionTest extends TestCase
      *
      * @return void
      */
-    public function test_product_get_by_trx()
+    public function test_transaction_get_by_trx()
     {
         DB::transaction(function () {
             $user = User::factory()->create();

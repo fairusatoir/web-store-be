@@ -69,19 +69,21 @@ class CheckoutController extends Controller
             );
 
             return response()->json(
-                ApiFormatter::success($transaction, 'Transaksi Berhasil!', 201)
+                ApiFormatter::success($transaction, 'Transaksi Berhasil!', 201),
+                201
             );
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            Log::error(
-                "[ERROR][{$e->getMessage()}]",
-                [
-                    "execption" => $e,
-                ],
-            );
-            return response()->json(
-                ApiFormatter::error("Produk tidak tersedia!", 404)
-            );
+            // } catch (ModelNotFoundException $e) {
+            //     DB::rollBack();
+            //     Log::error(
+            //         "[ERROR][{$e->getMessage()}]",
+            //         [
+            //             "execption" => $e,
+            //         ],
+            //     );
+            //     return response()->json(
+            //         ApiFormatter::error("Produk tidak tersedia!", 422),
+            //         422
+            //     );
         } catch (Exception $e) {
             //throw $e;
             DB::rollBack();

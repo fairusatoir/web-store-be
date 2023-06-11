@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class RouteHelper
 {
@@ -15,11 +16,11 @@ class RouteHelper
     private $name;
 
     /**
-     * The array of sub-routers data.
+     * The array of nested sub-routers data.
      *
      * @var array
      */
-    private $subroute;
+    private $nested;
 
     /**
      * Create a new controller instance.
@@ -29,7 +30,7 @@ class RouteHelper
     public function __construct(array $route)
     {
         $this->name = isset($route['name']) ? $route['name'] : null;
-        $this->subroute = isset($route['subroute']) ? $route['subroute'] : null;
+        $this->nested = isset($route['nested']) ? $route['nested'] : null;
     }
 
     /**
@@ -38,7 +39,7 @@ class RouteHelper
     public function getUri(): string
     {
         if (!isset($this->name)) {
-            throw new \InvalidArgumentException("Route name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $name = $this->name;
@@ -55,10 +56,10 @@ class RouteHelper
      * @param array $subroute The subroute information.
      * @return string The generated URI.
      */
-    function getSubRouteUri(array $subroute = null): string
+    public function getSubRouteUri(array $subroute = null): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $uri = $this->getUri() . '/';
@@ -85,12 +86,23 @@ class RouteHelper
     }
 
     /**
+     * Get the API controller class name based on the given name.
+     */
+    public function getApiController(): string
+    {
+        $name = $this->name;
+        $name = str_replace(" ", "", $name);
+        $name = 'App\\Http\\Controllers\\API\\' . $name . 'Controller';
+        return $name;
+    }
+
+    /**
      * Get the controller class name and method based on the given sub route name.
      */
     public function getSubController(array $subroute): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $controller = $this->getController();
@@ -104,12 +116,11 @@ class RouteHelper
     public function getNameSubroute(array $subroute): string
     {
         if (!isset($subroute['name'])) {
-            throw new \InvalidArgumentException("Subroute name is missing.");
+            throw new InvalidArgumentException();
         }
 
         $nameSubroute = Str::slug($subroute['name'], "-");
-        $name = $this->getUri() . '.' . $nameSubroute;
-        return $name;
+        return $this->getUri() . '.' . $nameSubroute;
     }
 
     /**
@@ -117,9 +128,9 @@ class RouteHelper
      *
      * @return bool
      */
-    public function subrouteExist()
+    public function nestedExist()
     {
-        return isset($this->subroute) ? true : false;
+        return isset($this->nested) ? true : false;
     }
 
     /**
@@ -129,7 +140,7 @@ class RouteHelper
      */
     public function getSubroute(): array
     {
-        return $this->subroute;
+        return $this->nested ?? [];
     }
 
     /**

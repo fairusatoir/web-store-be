@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CheckoutRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -29,15 +30,23 @@ class CheckoutController extends Controller
     public function store(CheckoutRequest $request)
     {
         try {
+            Log::info(
+                "[BEGIN][Store Checkout Transaction]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all()
+                ]
+            );
+
             DB::beginTransaction();
-            $data = $request->except('transaction_details');
+            $data = $request->except('transaction_detail');
             $data['uuid'] = "TRX" . date('Ymd') . mt_rand(0001, 9999);
 
             $transaction = Transaction::create($data);
 
-            foreach ($request->transaction_details as $product_id) {
+            foreach ($request->transaction_detail as $slug) {
 
-                $product = Product::findOrFail($product_id);
+                $product = Product::where('slug', $slug)->firstOrFail();
 
                 $details[] = new TransactionDetail([
                     'transactions_id' => $transaction->id,
@@ -52,21 +61,38 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            Log::info(
+                "[SUCCESS][Store Checkout Transaction {$data['uuid']}]",
+                [
+                    'response' => $data,
+                ]
+            );
+
             return response()->json(
                 ApiFormatter::success($transaction, 'Transaksi Berhasil!', 201)
             );
-        } catch (ModelNotFoundException $th) {
+        } catch (ModelNotFoundException $e) {
             DB::rollBack();
-            $this->logError($request, $th);
-            return response()->json(
-                ApiFormatter::error("Produk {$product_id} tidak ada!", 404)
+            Log::error(
+                "[ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
             );
-        } catch (Exception $th) {
-            //throw $th;
-            DB::rollBack();
-            $this->logError($request, $th);
             return response()->json(
-                ApiFormatter::error($th->getMessage())
+                ApiFormatter::error("Produk tidak tersedia!", 404)
+            );
+        } catch (Exception $e) {
+            //throw $e;
+            DB::rollBack();
+            Log::error(
+                "[ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return response()->json(
+                ApiFormatter::error($e->getMessage())
             );
         }
     }

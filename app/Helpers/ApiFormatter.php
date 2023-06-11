@@ -68,7 +68,9 @@ class ApiFormatter
     public static function error($message = null, $statusCode = 500, $error = null)
     {
         switch ($statusCode) {
+            case '400':
             case '404':
+            case '422':
                 $meta_msg = "BussinessError";
                 break;
             default:

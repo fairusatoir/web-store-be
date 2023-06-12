@@ -35,19 +35,19 @@ class ProductController extends Controller
             $limit = $request->input('limit', 10);
 
             $data = Product::with('galleries')
-                ->when(!Stringer::is_null($name), function ($query) use ($name) {
+                ->when(!Stringer::isNull($name), function ($query) use ($name) {
                     return $query->where('name', 'like', '%' . $name . '%');
                 })
-                ->when(!Stringer::is_null($type), function ($query) use ($type) {
+                ->when(!Stringer::isNull($type), function ($query) use ($type) {
                     return $query->where('type', 'like', '%' . $type . '%');
                 })
-                ->when(!Stringer::is_null($priceFrom), function ($query) use ($priceFrom) {
+                ->when(!Stringer::isNull($priceFrom), function ($query) use ($priceFrom) {
                     return $query->where('price', '>', $priceFrom);
                 })
-                ->when(!Stringer::is_null($priceTo), function ($query) use ($priceTo) {
+                ->when(!Stringer::isNull($priceTo), function ($query) use ($priceTo) {
                     return $query->where('price', '<', $priceTo);
                 })
-                ->when(!Stringer::is_null($orderBy), function ($query) use ($orderBy) {
+                ->when(!Stringer::isNull($orderBy), function ($query) use ($orderBy) {
                     return $query->orderBy($orderBy);
                 }, function ($query) {
                     $query->orderBy('name');

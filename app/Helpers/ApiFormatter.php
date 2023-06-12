@@ -16,13 +16,11 @@ class ApiFormatter
      */
     protected static function createMetaResponse($message, $statusCode, $status): array
     {
-        $meta = [
+        return [
             'message' => $message,
             'status_code' => $statusCode,
             'status' => $status,
         ];
-
-        return $meta;
     }
 
     /**
@@ -37,13 +35,11 @@ class ApiFormatter
      */
     protected static function createResponse($status, $data, $message, $statusCode, $error = null)
     {
-        $response = [
+        return  [
             'meta' => self::createMetaResponse($message, $statusCode, $status),
             'data' => $data,
             'error' => $error
         ];
-
-        return $response;
     }
 
     /**

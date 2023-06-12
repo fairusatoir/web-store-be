@@ -40,7 +40,8 @@ class CheckoutController extends Controller
 
             DB::beginTransaction();
             $data = $request->except('transaction_detail');
-            $data['uuid'] = "TRX" . date('Ymd') . mt_rand(0001, 9999);
+            $trxNumber = Transaction::whereDate('updated_at', Carbon::today())->count();
+            $data['uuid'] = "TRX" . date('Ymd') . str_pad($trxNumber, 4, '0', STR_PAD_LEFT);
 
             $transaction = Transaction::create($data);
 

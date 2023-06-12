@@ -67,13 +67,13 @@ class ApiFormatter
             case '400':
             case '404':
             case '422':
-                $meta_msg = "BussinessError";
+                $metaMsg = "BussinessError";
                 break;
             default:
-                $meta_msg = "Error";
+                $metaMsg = "Error";
                 $message = EnvHelper::useProduction() ? "Somethings is wrong" : $message;
                 break;
         }
-        return self::createResponse($meta_msg, null, $message, $statusCode, $error);
+        return self::createResponse($metaMsg, null, $message, $statusCode, $error);
     }
 }

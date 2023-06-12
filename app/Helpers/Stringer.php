@@ -14,7 +14,7 @@ class Stringer
      * @param mixed $val
      * @return mixed
      */
-    public static function is_null(mixed $val): mixed
+    public static function isNull(mixed $val): mixed
     {
         return !$val;
     }

@@ -7,10 +7,7 @@
 /vendor
 .env
 .env.backup
-<<<<<<< HEAD
-=======
 .env.development
->>>>>>> 7cc30d5 (add: ignore .env)
 .env.testing
 .env.production
 .phpunit.result.cache

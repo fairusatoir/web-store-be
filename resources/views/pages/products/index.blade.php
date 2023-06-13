@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Daftar Barang
+                        {{ __('message.title.product.index') }}
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -22,15 +22,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data as $item)
+                                @forelse ($data as $key => $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $key + 1 }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->type }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->quantity }}</td>
                                         <td>
-                                            <a href={{ route('products.gallery', ['product' => $item->id]) }}
+                                            <a href={{ route('products.galleries', ['product' => $item->id]) }}
                                                 class="btn btn-info btn-sm">
                                                 <i class="fa fa-picture-o"></i>
                                             </a>
@@ -51,7 +51,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="text-center p-5">
-                                            Data tidak tersedia
+                                            {{ __('message.available') }}
                                         </td>
                                     </tr>
                                 @endforelse

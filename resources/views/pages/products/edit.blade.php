@@ -4,10 +4,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
+                    <small>
+                        {{ __('message.title.product.update') }}
+                    </small>
                     <strong>
-                        Ubah Barang
+                        {{ $item->name }}
                     </strong>
-                    <small>{{ $item->name }}</small>
                 </div>
                 <div class="card-body card-block">
                     <form action={{ route('products.update', $item->id) }} method="post">
@@ -19,7 +21,7 @@
                                 <input type="text" name="name" value="{{ old('name') ?? $item->name }}"
                                     class="form-control @error('name') is-invalid @enderror">
                                 @error('name')
-                                    <div class="text-muted">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-lg-6">
@@ -27,7 +29,7 @@
                                 <input type="text" name="type" value="{{ old('type') ?? $item->type }}"
                                     class="form-control @error('type') is-invalid @enderror">
                                 @error('type')
-                                    <div class="text-muted">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -36,7 +38,7 @@
                             <textarea name="description" id="" cols="30" rows="10"
                                 class="form-control ckeditor @error('description') is-invalid @enderror">{{ old('description') ?? $item->description }}</textarea>
                             @error('description')
-                                <div class="text-muted">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="row">
@@ -50,7 +52,7 @@
                                         class="form-control @error('price') is-invalid @enderror">
                                 </div>
                                 @error('price')
-                                    <div class="text-muted">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group col-lg-6">
@@ -58,7 +60,7 @@
                                 <input type="number" name="quantity" value="{{ old('quantity') ?? $item->quantity }}"
                                     class="form-control @error('quantity') is-invalid @enderror">
                                 @error('quantity')
-                                    <div class="text-muted">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>

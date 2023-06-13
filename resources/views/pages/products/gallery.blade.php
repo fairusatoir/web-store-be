@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="box-title">Daftar Foto Barang {{ $product->name }}</h4>
+                    <h4 class="box-title">{{ __('message.title.product.gallery') }} {{ $data->name }}</h4>
                 </div>
                 <div class="card-body--">
                     <div class="table-stats order-table ov-h">
@@ -19,10 +19,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data as $item)
+                                @forelse ($data->galleries as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->products->name }}</td>
+                                        <td>{{ $data->name }}</td>
                                         <td>
                                             <img src={{ url($item->photo) }} alt="">
                                         </td>
@@ -42,7 +42,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="6" class="text-center p-5">
-                                            Data tidak tersedia
+                                            {{ __('message.available') }}
                                         </td>
                                     </tr>
                                 @endforelse

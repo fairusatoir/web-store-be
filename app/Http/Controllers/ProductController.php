@@ -3,26 +3,19 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Product;
-use App\Helpers\Stringer;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\ProductGallery;
-use Illuminate\Support\Facades\Log;
+use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
 
-    private $product;
-    private $str;
+    private $productService;
 
-    public function __construct(Product $product, Stringer $str)
+    public function __construct(ProductService $productService)
     {
-        $this->product = $product;
-        $this->str = $str;
+        $this->productService = $productService;
     }
 
     /**
@@ -31,7 +24,7 @@ class ProductController extends Controller
     public function index()
     {
         return view('pages.products.index')->with([
-            'data' => $this->product->all()
+            'data' => $this->productService->getAll()
         ]);
     }
 
@@ -48,33 +41,10 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        try {
-            Log::info(
-                "[{$request->header('x-request-id')}][BEGIN][Update Product]",
-                [
-                    'headers' => $request->header(),
-                    'body' => $request->all(),
-                ]
-            );
-
-            $item = $this->product->createProduct($request->all());
-
-            Log::info(
-                "[{$request->header('x-request-id')}][SUCCESS][Update Product]",
-                [
-                    'response' => $item,
-                ]
-            );
-            return redirect()->route('products.index')->with('suc', __('message.success.update'));
-        } catch (ModelNotFoundException $e) {
-            Log::error(
-                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
-                [
-                    "execption" => $e,
-                ],
-            );
-            return redirect()->route('products.index')->with('err', __('message.wrong'));
+        if ($this->productService->save($request)) {
+            return redirect()->route('products.index')->with('suc', __('message.success.create'));
         }
+        return redirect()->route('products.index')->with('err', __('message.wrong'));
     }
 
     /**
@@ -88,18 +58,15 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $product)
+    public function edit(Request $request, string $product)
     {
-        try {
-            $product = $this->product->findOrFail($product);
+        $product = $this->productService->getById($request, $product);
+        if ($product) {
             return view('pages.products.edit')->with([
                 'item' => $product
             ]);
-        } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with([
-                'err' => __('message.wrong')
-            ]);
         }
+        return redirect()->back()->with(['err' => __('message.wrong')]);
     }
 
     /**
@@ -107,32 +74,10 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, string $product)
     {
-        try {
-            Log::info(
-                "[{$request->header('x-request-id')}][BEGIN][Update Product]",
-                [
-                    'headers' => $request->header(),
-                    'body' => $request->all(),
-                ]
-            );
-            $itemUpdate = $this->product->updateById($request->all(), $product);
-
-            Log::info(
-                "[{$request->header('x-request-id')}][SUCCESS][Update Product]",
-                [
-                    'response' => $itemUpdate,
-                ]
-            );
+        if ($this->productService->update($request, $product)) {
             return redirect()->route('products.index')->with('suc', __('message.success.update'));
-        } catch (ModelNotFoundException $e) {
-            Log::error(
-                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
-                [
-                    "execption" => $e,
-                ],
-            );
-            return redirect()->route('products.index')->with('err', __('message.wrong'));
         }
+        return redirect()->route('products.index')->with('err', __('message.wrong'));
     }
 
     /**
@@ -140,32 +85,10 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, string $product)
     {
-        try {
-            Log::info(
-                "[{$request->header('x-request-id')}][BEGIN][Delete Product]",
-                [
-                    'headers' => $request->header(),
-                    'body' => $request->all(),
-                ]
-            );
-
-            $this->product->deleteById($product);
-
-            Log::info(
-                "[{$request->header('x-request-id')}][SUCCESS][Delete Product]",
-                []
-            );
-
+        if ($this->productService->delete($request, $product)) {
             return redirect()->route('products.index')->with('suc', __('message.success.delete'));
-        } catch (Exception $e) {
-            Log::error(
-                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
-                [
-                    "execption" => $e,
-                ],
-            );
-            return redirect()->route('products.index')->with('err', __('message.wrong'));
         }
+        return redirect()->route('products.index')->with('err', __('message.wrong'));
     }
 
     /**
@@ -173,21 +96,12 @@ class ProductController extends Controller
      */
     public function gallery(Request $request, string $product)
     {
-        try {
+        $product = $this->productService->getById($request, $product);
+        if ($product) {
             return view('pages.products.gallery')->with([
-                'product' => Product::findOrFail($product),
-                'data' => ProductGallery::with('products')
-                    ->where('products_id', $product)
-                    ->get()
+                'data' => $product
             ]);
-        } catch (Exception $e) {
-            Log::error(
-                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
-                [
-                    "execption" => $e,
-                ],
-            );
-            return redirect()->route('products.index')->with('err', __('message.wrong'));
         }
+        return redirect()->back()->with(['err' => __('message.wrong')]);
     }
 }

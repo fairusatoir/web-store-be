@@ -25,19 +25,6 @@ class Product extends Model
     }
 
     /**
-     * Create Data Product
-     *
-     * @param  mixed $data
-     * @return Product
-     */
-    public function createProduct(array $data): Product
-    {
-        $data['slug'] = Str::slug($data['name']);
-        $item = $this->create($data);
-        return $item;
-    }
-
-    /**
      * Update Data Product
      *
      * @param  mixed $data
@@ -52,15 +39,15 @@ class Product extends Model
     }
 
     /**
-     * Delete Data Product
+     * Delete Product By Id
      *
      * @param  mixed $id
-     * @return void
+     * @return bool
      */
-    public function deleteById(String $id)
+    public function deleteById(String $id): bool
     {
         $item = $this->findOrFail($id);
-        ProductGallery::where('products_id', $item->id)->delete();
         $item->delete();
+        return true;
     }
 }

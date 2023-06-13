@@ -23,8 +23,8 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:100',
-            // 'slug' => 'required|max:150',
+            'name' => 'unique:products|required|max:100',
+            // 'slug' => 'unique|max:150',
             'type' => 'required|max:50',
             'description' => 'required|max:255',
             'price' => 'required|numeric',
@@ -36,8 +36,9 @@ class ProductRequest extends FormRequest
     {
         return [
             'name.required'     => __('validation.required', ['attribute' => 'NAME']),
+            'name.unique'     => __('validation.unique', ['attribute' => 'NAME']),
             'name.max'          => __('validation.max_digits', ['attribute' => 'NAME', 'max' => 100]),
-            // 'slug.required'     => __('validation.wrong', ['attribute' => 'NAME']),
+            // 'slug.unique'     => __('validation.wrong', ['attribute' => 'NAME']),
             // 'slug.max'          => __('validation.wrong', ['attribute' => 'NAME']),
             'type.required'     => __('validation.required', ['attribute' => 'TYPE']),
             'type.max'          => __('validation.wrong', ['attribute' => 'TYPE']),

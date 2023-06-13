@@ -15,8 +15,8 @@ class HelpersTest extends TestCase
     public function test_Stringer_null_checker(): void
     {
         $hlp = new Stringer();
-        $this->assertTrue($hlp->is_null(""));
-        $this->assertTrue($hlp->is_null(null));
+        $this->assertTrue($hlp->isNull(""));
+        $this->assertTrue($hlp->isNull(null));
     }
 
     /**

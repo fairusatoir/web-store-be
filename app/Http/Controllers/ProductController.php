@@ -181,7 +181,13 @@ class ProductController extends Controller
                     ->get()
             ]);
         } catch (Exception $e) {
-            $this->logError($request, $e);
+            Log::error(
+                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return redirect()->route('products.index')->with('err', __('message.wrong'));
         }
     }
 }

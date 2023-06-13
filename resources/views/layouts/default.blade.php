@@ -28,6 +28,8 @@
         <!-- Content -->
         <div class="content">
             {{-- pages content --}}
+            @include('includes.alert-success')
+            @include('includes.alert-error')
             @yield('content')
         </div>
         <!-- /.content -->

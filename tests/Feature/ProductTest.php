@@ -5,13 +5,32 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Product;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProductTest extends TestCase
 {
+    use WithFaker, DatabaseTransactions;
 
-    use RefreshDatabase, WithFaker;
+    protected $product;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->product = [
+            'name' => $this->faker->word,
+            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->numberBetween(250000, 2250000),
+            'quantity' => $this->faker->numberBetween(300, 1000),
+        ];
+
+        $this->product['slug'] = Str::slug($this->product['name']);
+    }
 
     /**
      * Test index a new product.
@@ -49,20 +68,13 @@ class ProductTest extends TestCase
      */
     public function test_product_store()
     {
-        $productData = [
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ];
-
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->post('/products', $productData);
+        $response = $this->actingAs($user)->post('/products', $this->product);
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
-        $this->assertDatabaseHas('products', $productData);
+        $response->assertSessionHas('suc', __('message.success.create'));
+        $this->assertDatabaseHas('products', $this->product);
     }
 
     /**
@@ -72,23 +84,14 @@ class ProductTest extends TestCase
      */
     public function test_product_edit_page()
     {
-        $product = Product::factory()->create([
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ]);
+        $product = Product::factory()->create($this->product);
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/products/' . $product->id . '/edit');
-
-
+        $response = $this->actingAs($user)->get("/products/{$product->id}/edit");
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.edit');
         $response->assertViewHas('item');
     }
-
     /**
      * Test updating an existing product.
      *
@@ -96,28 +99,17 @@ class ProductTest extends TestCase
      */
     public function test_product_update()
     {
-        $product = Product::factory()->create([
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ]);
+        $product = Product::factory()->create($this->product);
 
-        $updatedData = [
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ];
+        $updatedData = $this->product;
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->put('/products/' . $product->id, $updatedData);
-
+        $response = $this->actingAs($user)->put("/products/{$product->id}", $updatedData);
         $response->assertStatus(302);
         $response->assertRedirect('/products');
+        $response->assertSessionHas('suc', __('message.success.update'));
         $this->assertDatabaseHas('products', $updatedData);
+        $this->assertDatabaseMissing('products', $product->toArray());
     }
 
     /**
@@ -127,19 +119,14 @@ class ProductTest extends TestCase
      */
     public function test_product_delete()
     {
-        $product = Product::factory()->create([
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ]);
+        $product = Product::factory()->create($this->product);
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->delete('/products/' . $product->id);
+        $response = $this->actingAs($user)->delete("/products/{$product->id}");
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
+        $response->assertSessionHas('suc', __('message.success.delete'));
         $this->assertSoftDeleted('products', ['id' => $product->id]);
     }
 
@@ -150,20 +137,11 @@ class ProductTest extends TestCase
      */
     public function test_product_gallery_page()
     {
-        $product = Product::factory()->create([
-            'name' => $this->faker->word,
-            'type' => $this->faker->randomElement(['Atasan', 'Bawahan', 'Jaket', 'Sepatu']),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->numberBetween(250000, 2250000),
-            'quantity' => $this->faker->numberBetween(300, 1000),
-        ]);
-
+        $product = Product::factory()->create($this->product);
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/products/' . $product->id . '/gallery');
-
+        $response = $this->actingAs($user)->get("/products/{$product->id}/galleries");
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.gallery');
-        $response->assertViewHas('product');
         $response->assertViewHas('data');
     }
 }

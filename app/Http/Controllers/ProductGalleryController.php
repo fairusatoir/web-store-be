@@ -4,21 +4,32 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Product;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProductGallery;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ProductGalleryRequest;
+use App\Services\ProductGalleryService;
+use App\Services\ProductService;
 
 class ProductGalleryController extends Controller
 {
+
+    private $productService;
+    private $productGalleryService;
+
+    public function __construct(ProductService $productService, ProductGalleryService $productGalleryService)
+    {
+        $this->productService = $productService;
+        $this->productGalleryService = $productGalleryService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         return view('pages.product-galleries.index')->with([
-            'data' => ProductGallery::with('products')->get()
+            'data' => $this->productGalleryService->getAll()
         ]);
     }
 
@@ -28,7 +39,7 @@ class ProductGalleryController extends Controller
     public function create()
     {
         return view('pages.product-galleries.create')->with([
-            'products' => Product::all()
+            'products' => $this->productService->getAll()
         ]);
     }
 
@@ -37,26 +48,10 @@ class ProductGalleryController extends Controller
      */
     public function store(ProductGalleryRequest $request)
     {
-        try {
-            $file = $request->file('photo');
-
-            $extension = $file->getClientOriginalExtension();
-            $fileName = 'photo_product_' . Str::random(10) . '.' . $extension;
-            $directory = 'assets/product/' . $request->products_id;
-
-            // Membuat direktori jika belum ada
-            if (!Storage::exists($directory)) {
-                Storage::makeDirectory($directory);
-            }
-            $path = $file->storeAs($directory, $fileName, 'public');
-
-            $data = $request->all();
-            $data['photo'] = $path;
-            ProductGallery::create($data);
-        } catch (Exception $e) {
-            $this->logError($request, $e);
+        if ($this->productGalleryService->save($request)) {
+            return redirect()->route('product-galleries.index')->with('suc', __('message.success.create'));
         }
-        return redirect()->route('product-galleries.index');
+        return redirect()->route('product-galleries.index')->with('err', __('message.wrong'));
     }
 
     /**
@@ -88,12 +83,9 @@ class ProductGalleryController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
-        try {
-            $item = ProductGallery::findOrFail($id);
-            $item->delete();
-        } catch (Exception $e) {
-            $this->logError($request, $e);
+        if ($this->productGalleryService->delete($request, $id)) {
+            return redirect()->route('product-galleries.index')->with('suc', __('message.success.delete'));
         }
-        return redirect()->route('product-galleries.index');
+        return redirect()->route('product-galleries.index')->with('suc', __('message.wrong'));
     }
 }

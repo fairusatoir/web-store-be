@@ -212,7 +212,9 @@ class ProductService
             );
 
             $item = $this->product->deleteById($id);
-            $this->productGallery->find($item->id)->get()->delete();
+            if ($item) {
+                $this->productGallery->where('products_id', $id)->delete();
+            }
 
             Log::info(
                 "[{$request->header('x-request-id')}][SUCCESS][Delete Product]",

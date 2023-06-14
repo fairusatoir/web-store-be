@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Support\Str;
+use App\Http\Requests\ProductDefaultRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -22,14 +23,13 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'unique:products|required|max:100',
-            // 'slug' => 'unique|max:150',
-            'type' => 'required|max:50',
-            'description' => 'required|max:255',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
-        ];
+
+        $validator = match ($this->route()->getName()) {
+            'products.update' => new ProductUpdate(),
+            default => new ProductDefaultRule(),
+        };
+
+        return $validator->rules();
     }
 
     public function messages()

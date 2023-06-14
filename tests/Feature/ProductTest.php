@@ -40,7 +40,9 @@ class ProductTest extends TestCase
     public function test_product_get_all_page()
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/products');
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->get('/products');
 
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.index');
@@ -55,7 +57,9 @@ class ProductTest extends TestCase
     public function test_product_create_page()
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/products/create');
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->get('/products/create');
 
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.create');
@@ -69,7 +73,9 @@ class ProductTest extends TestCase
     public function test_product_store()
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->post('/products', $this->product);
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->post('/products', $this->product);
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
@@ -87,7 +93,9 @@ class ProductTest extends TestCase
         $product = Product::factory()->create($this->product);
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get("/products/{$product->id}/edit");
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->get("/products/{$product->id}/edit");
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.edit');
         $response->assertViewHas('item');
@@ -104,7 +112,9 @@ class ProductTest extends TestCase
         $updatedData = $this->product;
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->put("/products/{$product->id}", $updatedData);
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->put("/products/{$product->id}", $updatedData);
         $response->assertStatus(302);
         $response->assertRedirect('/products');
         $response->assertSessionHas('suc', __('message.success.update'));
@@ -122,7 +132,9 @@ class ProductTest extends TestCase
         $product = Product::factory()->create($this->product);
 
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->delete("/products/{$product->id}");
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->delete("/products/{$product->id}");
 
         $response->assertStatus(302);
         $response->assertRedirect('/products');
@@ -139,7 +151,9 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create($this->product);
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get("/products/{$product->id}/galleries");
+        $response = $this->actingAs($user)
+            ->withHeaders(['X-touchpoint-request' => 'testing',])
+            ->get("/products/{$product->id}/galleries");
         $response->assertStatus(200);
         $response->assertViewIs('pages.products.gallery');
         $response->assertViewHas('data');

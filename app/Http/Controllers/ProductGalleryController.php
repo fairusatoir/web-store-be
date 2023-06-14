@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\ProductGallery;
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ProductGalleryRequest;
 use App\Services\ProductGalleryService;
 use App\Services\ProductService;

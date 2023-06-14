@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Daftar Foto Barang
+                        {{ __('message.title.product-gallery.index') }}
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -44,7 +44,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="5" class="text-center p-5">
-                                            Data tidak tersedia
+                                            {{ __('message.available') }}
                                         </td>
                                     </tr>
                                 @endforelse

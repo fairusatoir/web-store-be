@@ -22,7 +22,7 @@
                                     @endforeach
                                 </select>
                                 @error('products_id')
-                                    <div class="text-muted">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -36,7 +36,7 @@
                                         for="customFile">Upload
                                         Foto</label>
                                     @error('photo')
-                                        <div class="text-muted">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                     <input type="checkbox" name="is_default" class="custom-control-input" id="customCheck1">
                                     <label class="custom-control-label" for="customCheck1">Jadikan Default</label>
                                     @error('is_default')
-                                        <div class="text-muted">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>

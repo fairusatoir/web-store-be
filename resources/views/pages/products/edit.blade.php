@@ -50,10 +50,10 @@
                                     </div>
                                     <input type="number" name="price" value="{{ old('price') ?? $item->price }}"
                                         class="form-control @error('price') is-invalid @enderror">
+                                    @error('price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                @error('price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="quantity" class="form-control-label">Kwantitas barang</label>

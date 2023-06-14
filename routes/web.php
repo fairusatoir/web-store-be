@@ -40,6 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transactions', TransactionController::class)
         ->except(['create', 'store']);
 
-    Route::get('transactions/{product}/set-status', [TransactionController::class, 'setStatus'])
-        ->name('transactions.status');
+    Route::get('transactions/{transaction}/set-status', [TransactionController::class, 'setStatus'])
+        ->name('transactions.set-status');
 });

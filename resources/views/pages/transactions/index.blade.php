@@ -23,9 +23,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data as $item)
+                                @forelse ($data as $key => $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
+                                        <td>{{ $key+1 }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->number }}</td>

@@ -5,18 +5,28 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Services\TransactionService;
 use App\Http\Requests\TransactionRequest;
 
 class TransactionController extends Controller
 {
+
+    protected $transactionService;
+
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.transactions.index')->with([
-            'data' => Transaction::orderBy('created_at', 'desc')->get()
-        ]);
+        return view('pages.transactions.index')
+            ->with([
+                'data' =>  $this->transactionService->getAll()
+            ]);
     }
 
     /**
@@ -38,64 +48,65 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $transaction)
     {
-        return view('pages.transactions.show')->with([
-            "data" => Transaction::with('details.product')->findOrFail($id)
-        ]);
+        $transaction = $this->transactionService->getDetailById($request, $transaction);
+        return view('pages.transactions.show')
+            ->with(["data" => $transaction]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $transaction)
     {
-        return view('pages.transactions.edit')->with([
-            'data' => Transaction::findOrFail($id)
-        ]);
+        $product = $this->transactionService->getById($request, $transaction);
+        if ($product) {
+            return view('pages.transactions.edit')
+                ->with([
+                    'data' => $product
+                ]);
+        }
+        return redirect()->route('transactions.index')
+            ->with('err', __('message.wrong'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(TransactionRequest $request, string $id)
+    public function update(TransactionRequest $request, string $product)
     {
-        try {
-            $data = $request->all();
-            $item = Transaction::findOrFail($id);
-            $item->update($data);
-        } catch (Exception $e) {
-            $this->logError($request, $e);
+        if ($this->transactionService->update($request, $product)) {
+            return redirect()->route('transactions.index')
+                ->with('suc', __('message.success.update'));
         }
-        return redirect()->route('transactions.index');
+        return redirect()->route('transactions.index')
+            ->with('err', __('message.wrong'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, string $product)
     {
-        try {
-            $item = Transaction::findOrFail($id);
-            $item->delete();
-        } catch (Exception $e) {
-            $this->logError($request, $e);
+        if ($this->transactionService->delete($request, $product)) {
+            return redirect()->route('transactions.index')
+                ->with('suc', __('message.success.delete'));
         }
-        return redirect()->route('transactions.index');
+        return redirect()->route('transactions.index')
+            ->with('err', __('message.wrong'));
     }
 
     /**
-     * Set the status of specified resource.
+     * Set the status of specified Transaction.
      */
-    public function setStatus(TransactionRequest $request, string $id)
+    public function setStatus(TransactionRequest $request, string $transaction)
     {
-        try {
-            $item = Transaction::findOrFail($id);
-            $item->transaction_status = $request->status;
-            $item->save();
-        } catch (Exception $e) {
-            $this->logError($request, $e);
+        if ($this->transactionService->updateStatus($request, $transaction)) {
+            return redirect()->route('transactions.index')
+                ->with('suc', __('message.success.update'));
         }
-        return redirect()->route('transactions.index');
+        return redirect()->route('transactions.index')
+            ->with('err', __('message.wrong'));
     }
 }

@@ -21,4 +21,26 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionDetail::class, 'transactions_id');
     }
+
+    /**
+     * Update Data Transaction
+     *
+     * @param  mixed $data
+     * @param  mixed $id
+     * @return Transaction
+     */
+    public function updateById(array $data, String $id): Transaction
+    {
+        $item = $this->findOrFail($id);
+        $item->update($data);
+        return $item;
+    }
+
+    public function updateStatus(String $status, String $id): Transaction
+    {
+        $item = $this->findOrFail($id);
+        $item->transaction_status = $status;
+        $item->save();
+        return $item;
+    }
 }

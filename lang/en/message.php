@@ -11,14 +11,20 @@ return [
     'title' => [
         'product' => [
             'index' => 'List Product',
-            'create' => 'Save Product',
+            'create' => 'New Product',
             'update' => 'Edit Product',
             'gallery' => 'List Product Gallery',
         ],
         'product-gallery' => [
             'index' => 'List Gallery',
-            'create' => 'Save Gallery',
+            'create' => 'New Gallery',
             'update' => 'Edit Gallery',
+        ],
+        'transaction' => [
+            'index' => 'List Transaction',
+            'create' => 'New Transaction',
+            'update' => 'Edit Transaction',
+            'detail' => 'Detail Transaction',
         ],
     ],
 ];

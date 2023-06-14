@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">
                     <strong>
-                        Daftar Transaksi
+                        {{__('message.title.transaction.index')}}
                     </strong>
                 </div>
                 <div class="card-body card-block">
@@ -66,7 +66,7 @@
                                             <a href="#mymodal"
                                                 data-remote={{ route('transactions.show', ['transaction' => $item->id]) }}
                                                 data-toggle="modal" data-target="#mymodal"
-                                                data-title="Detail Transaksi {{ $item->uuid }}"
+                                                data-title="{{__('message.title.transaction.detail')}} <strong>{{ $item->uuid }}</strong>"
                                                 class="btn btn-info btn-sm">
                                                 <i class="fa fa-eye"></i>
                                             </a>
@@ -87,7 +87,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center p-5">
-                                            Data tidak tersedia
+                                            {{__('message.available')}}
                                         </td>
                                     </tr>
                                 @endforelse

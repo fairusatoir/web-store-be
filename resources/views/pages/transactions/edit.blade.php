@@ -4,10 +4,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>
-                        Ubah Transaksi
-                    </strong>
-                    <small>{{ $data->uuid }}</small>
+                    <small>
+                        {{__('message.title.transaction.update')}}
+                    </small>
+                    <strong>{{ $data->uuid }}</strong>
                 </div>
                 <div class="card-body card-block">
                     <form action={{ route('transactions.update', $data->id) }} method="post">

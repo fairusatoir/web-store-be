@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\ProductGallery;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,6 +13,7 @@ use Illuminate\Support\Str;
 class ProductService
 {
     protected $product;
+    protected $productGallery;
     protected $str;
 
     /**
@@ -21,9 +23,10 @@ class ProductService
      * @param  mixed $str
      * @return void
      */
-    public function __construct(Product $product, Str $str)
+    public function __construct(Product $product, ProductGallery $productGallery, Str $str)
     {
         $this->product = $product;
+        $this->productGallery = $productGallery;
         $this->str = $str;
     }
 
@@ -82,7 +85,7 @@ class ProductService
      * @param  mixed $id
      * @return Product
      */
-    public function getById(Request $request, String $id): Product
+    public function getById(Request $request, String $id): ?Product
     {
         try {
             Log::info(
@@ -93,7 +96,7 @@ class ProductService
                 ]
             );
 
-            $item = $this->product->findOrFail($id);
+            $item = $this->product->find($id);
 
             Log::info(
                 "[{$request->header('x-request-id')}][SUCCESS][Get Product]",
@@ -209,6 +212,7 @@ class ProductService
             );
 
             $item = $this->product->deleteById($id);
+            $this->productGallery->find($item->id)->get()->delete();
 
             Log::info(
                 "[{$request->header('x-request-id')}][SUCCESS][Delete Product]",

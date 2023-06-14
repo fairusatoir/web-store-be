@@ -11,8 +11,14 @@ return [
     'title' => [
         'product' => [
             'index' => 'List Product',
-            'create' => 'Create Product',
+            'create' => 'Save Product',
             'update' => 'Edit Product',
+            'gallery' => 'List Product Gallery',
+        ],
+        'product-gallery' => [
+            'index' => 'List Gallery',
+            'create' => 'Save Gallery',
+            'update' => 'Edit Gallery',
         ],
     ],
 ];

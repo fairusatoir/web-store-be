@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends Controller
 {
@@ -66,7 +64,7 @@ class ProductController extends Controller
                 'item' => $product
             ]);
         }
-        return redirect()->back()->with(['err' => __('message.wrong')]);
+        return redirect()->route('products.index')->with('err', __('message.wrong'));
     }
 
     /**
@@ -102,6 +100,6 @@ class ProductController extends Controller
                 'data' => $product
             ]);
         }
-        return redirect()->back()->with(['err' => __('message.wrong')]);
+        return redirect()->route('products.index')->with('err', __('message.wrong'));
     }
 }

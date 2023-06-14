@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Product;
-use App\Models\ProductGallery;
 use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
+use App\Models\Product;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Services\ProductGalleryService;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
     protected $product;
-    protected $productGallery;
+    protected $productGalleryService;
     protected $str;
 
     /**
@@ -23,10 +23,10 @@ class ProductService
      * @param  mixed $str
      * @return void
      */
-    public function __construct(Product $product, ProductGallery $productGallery, Str $str)
+    public function __construct(Product $product, ProductGalleryService $productGalleryService, Str $str)
     {
         $this->product = $product;
-        $this->productGallery = $productGallery;
+        $this->productGalleryService = $productGalleryService;
         $this->str = $str;
     }
 
@@ -213,7 +213,7 @@ class ProductService
 
             $item = $this->product->deleteById($id);
             if ($item) {
-                $this->productGallery->where('products_id', $id)->delete();
+                $this->productGalleryService->deleteByProduct($request, $id);
             }
 
             Log::info(

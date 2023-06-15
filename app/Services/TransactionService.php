@@ -24,9 +24,12 @@ class TransactionService
      *
      * @return Collection Transaction
      */
-    public function getAll(): Collection
+    public function getAll($limit = null): Collection
     {
-        return $this->transaction->orderBy('created_at', 'desc')->get();
+        return $this->transaction
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
     }
 
     /**
@@ -102,6 +105,158 @@ class TransactionService
                 ],
             );
             return null;
+        }
+    }
+
+    /**
+     * Get Transaction By Status
+     *
+     * @param  mixed $request
+     * @param  mixed $status
+     * @return Transaction
+     */
+    public function getByStatus(Request $request, String $status): Transaction
+    {
+        try {
+            Log::info(
+                "[{$request->header('x-request-id')}][BEGIN][Get Transaction]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all(),
+                ]
+            );
+
+            $data = $this->transaction->where('transaction_status', $status);
+
+            Log::info(
+                "[{$request->header('x-request-id')}][SUCCESS][Get Transaction]",
+                [
+                    'response' => $data,
+                ]
+            );
+            return $data;
+        } catch (Exception $e) {
+            Log::error(
+                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return null;
+        }
+    }
+
+    /**
+     * Get Transaction By Status
+     *
+     * @param  mixed $request
+     * @param  mixed $status
+     * @return Transaction
+     */
+    public function getCountByStatus(Request $request, String $status): int
+    {
+        try {
+            Log::info(
+                "[{$request->header('x-request-id')}][BEGIN][Get Transaction]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all(),
+                ]
+            );
+
+            $data = $this->transaction->where('transaction_status', $status)->count();
+
+            Log::info(
+                "[{$request->header('x-request-id')}][SUCCESS][Get Transaction]",
+                [
+                    'response' => $data,
+                ]
+            );
+            return $data;
+        } catch (Exception $e) {
+            Log::error(
+                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return 0;
+        }
+    }
+
+    /**
+     * Get Amount income - Only success transaction
+     *
+     * @param  mixed $request
+     * @param  mixed $id
+     * @return Integer Sum of amount success transaction
+     */
+    public function sumIncome(Request $request): int
+    {
+        try {
+            Log::info(
+                "[{$request->header('x-request-id')}][BEGIN][Get Transaction Income]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all(),
+                ]
+            );
+
+            $income = $this->transaction->sumSuccessTransaction();
+
+            Log::info(
+                "[{$request->header('x-request-id')}][SUCCESS][Get Transaction Income]",
+                [
+                    'response' => $income,
+                ]
+            );
+            return $income;
+        } catch (Exception $e) {
+            Log::error(
+                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return 0;
+        }
+    }
+
+    /**
+     * Get count all transaction
+     *
+     * @param  mixed $request
+     * @param  mixed $id
+     * @return Integer Sum of amount success transaction
+     */
+    public function countTransaction(Request $request): int
+    {
+        try {
+            Log::info(
+                "[{$request->header('x-request-id')}][BEGIN][Get Total Amount Transaction]",
+                [
+                    'headers' => $request->header(),
+                    'body' => $request->all(),
+                ]
+            );
+
+            $count = $this->transaction->count();
+
+            Log::info(
+                "[{$request->header('x-request-id')}][SUCCESS][Get Total Amount Transaction]",
+                [
+                    'response' => $count,
+                ]
+            );
+            return $count;
+        } catch (Exception $e) {
+            Log::error(
+                "[{$request->header('x-request-id')}][ERROR][{$e->getMessage()}]",
+                [
+                    "execption" => $e,
+                ],
+            );
+            return 0;
         }
     }
 

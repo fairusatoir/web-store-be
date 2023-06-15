@@ -4,34 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Services\ProductService;
+use App\Services\TransactionService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
 
-    protected $product;
+    protected $productService;
+    protected $transactionService;
 
-    public function __construct(Product $product)
+    public function __construct(ProductService $productService, TransactionService $transactionService)
     {
-        $this->product = $product;
+        $this->productService = $productService;
+        $this->transactionService = $transactionService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $income = Transaction::with('details.product')
-            ->where('transaction_status', 'SUCCESS')
-            ->get()
-            ->sum(function ($transaction) {
-                return $transaction->details->sum(function ($detail) use ($transaction) {
-                    return $detail->product->price * $transaction->transaction_total;
-                });
-            });
-        $sales = Transaction::count();
-        $item = Transaction::orderBy('id', 'DESC')->take(5)->get();
+        $income = $this->transactionService->sumIncome($request);
+        $sales = $this->transactionService->countTransaction($request);
+        $item = $this->transactionService->getAll(5);
         $pie = [
-            'pending' => Transaction::where('transaction_status', 'PENDING')->count(),
-            'failed' => Transaction::where('transaction_status', 'FAILED')->count(),
-            'success' => Transaction::where('transaction_status', 'SUCCESS')->count(),
+            'pending' => $this->transactionService->getCountByStatus($request, "PENDING"),
+            'failed' => $this->transactionService->getCountByStatus($request, "FAILED"),
+            'success' => $this->transactionService->getCountByStatus($request, "SUCCESS"),
         ];
         return view('pages.dashboard')->with([
             'income' => $income,

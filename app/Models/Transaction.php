@@ -6,6 +6,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Ramsey\Uuid\Type\Integer;
 
 class Transaction extends Model
 {
@@ -23,6 +24,23 @@ class Transaction extends Model
     }
 
     /**
+     * Get Amount Transaction and Product Price
+     *
+     * @return Integer
+     */
+    public function sumSuccessTransaction(): Integer
+    {
+        return $this->with('details.product')
+            ->where('transaction_status', 'SUCCESS')
+            ->get()
+            ->sum(function ($transaction) {
+                return $transaction->details->sum(function ($detail) use ($transaction) {
+                    return $detail->product->price * $transaction->transaction_total;
+                });
+            });
+    }
+
+    /**
      * Update Data Transaction
      *
      * @param  mixed $data
@@ -36,6 +54,13 @@ class Transaction extends Model
         return $item;
     }
 
+    /**
+     * Update status transaction by Id
+     *
+     * @param  mixed $status
+     * @param  mixed $id
+     * @return Transaction
+     */
     public function updateStatus(String $status, String $id): Transaction
     {
         $item = $this->findOrFail($id);

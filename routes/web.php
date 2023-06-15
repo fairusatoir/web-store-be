@@ -21,12 +21,13 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 // @phpstan-ignore-next-line
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('products', ProductController::class)
         ->except(['show']);

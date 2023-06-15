@@ -28,15 +28,20 @@ class Transaction extends Model
      *
      * @return Integer
      */
-    public function sumSuccessTransaction(): Integer
+    public function sumSuccessTransaction()
     {
-        return $this->with('details.product')
+
+        return $this
+            ->with(['details.product' => function ($query) {
+                $query->withTrashed();
+            }])
             ->where('transaction_status', 'SUCCESS')
             ->get()
             ->sum(function ($transaction) {
-                return $transaction->details->sum(function ($detail) use ($transaction) {
-                    return $detail->product->price * $transaction->transaction_total;
-                });
+                return $transaction->details
+                    ->sum(function ($detail) use ($transaction) {
+                        return $transaction->transaction_total * $detail->product->price;
+                    });
             });
     }
 

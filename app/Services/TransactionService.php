@@ -191,7 +191,7 @@ class TransactionService
      * @param  mixed $id
      * @return Integer Sum of amount success transaction
      */
-    public function sumIncome(Request $request): int
+    public function sumIncome(Request $request)
     {
         try {
             Log::info(
@@ -218,6 +218,7 @@ class TransactionService
                     "execption" => $e,
                 ],
             );
+
             return 0;
         }
     }

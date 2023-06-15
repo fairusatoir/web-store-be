@@ -1,6 +1,8 @@
 <?php
 
-use App\Helpers\RouteHelper;
+use App\Http\Controllers\API\CheckoutController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,54 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-$pages = [
-    [
-        'name' => 'Product',
-        'only' => ['index', 'show'],
-    ],
-    [
-        'name' => 'Checkout',
-        'only' => ['store'],
-    ],
-    [
-        'name' => 'Transaction',
-        'only' => ['index', 'show'],
-    ]
-];
+Route::middleware([''])->group(function () {
 
-foreach ($pages as $page) {
+    Route::resource('products', ProductController::class)
+        ->only(['index', 'show']);
 
-    $route = new RouteHelper($page);
+    Route::resource('checkouts', CheckoutController::class)
+        ->only(['store']);
 
-    Route::resource(
-        $route->getUri(),
-        $route->getApiController()
-    )->only($page['only'] ?? '');
-
-    if ($route->nestedExist()) {
-        foreach ($route->getSubroute() as $subroute) {
-            switch ($subroute['method']) {
-                case 'get':
-                    Route::get(
-                        $route->getSubRouteUri($subroute),
-                        $route->getSubController($subroute)
-                    )->name($route->getNameSubroute($subroute));
-                    break;
-                case 'post':
-                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'post'
-                    // ...
-                    break;
-                case 'put':
-                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'put'
-                    // ...
-                    break;
-                case 'delete':
-                    // Kode yang akan dijalankan jika $subroute['method'] sama dengan 'delete'
-                    // ...
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-}
+    Route::resource('transactions', TransactionController::class)
+        ->only(['index', 'show']);
+});
